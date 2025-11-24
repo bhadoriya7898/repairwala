@@ -280,14 +280,13 @@ const Home = () => {
 
             {/* Section 8 What our client Says About Us (Client Testimonials) */}
 
-            {/* <section className="flex items-center justify-center my-10 flex-col ">
-                    <h1>What Our Clients Say About Us</h1>
-
+            <section className="flex items-center justify-center my-10 flex-col ">
+                    {/* <h1>What Our Clients Say About Us</h1> */}
                     <div className="w-full flex overflow-x-scroll">
                         <TestimonialBox/>
                     </div>
             
-            </section> */}
+            </section>
 
 
 

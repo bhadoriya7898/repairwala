@@ -22,90 +22,69 @@ const RequestCallbackForm = ({ className }) => {
     };
 
     return (
-        <div className="flex flex-col-reverse md:flex-row w-full items-stretch  h-auto gap-5">
+  <div className="flex flex-col-reverse md:flex-row w-full items-stretch h-auto gap-5">
 
-            {/* Image Div  */}
-            <div className="relative w-full md:w-4/12  md:h-full rounded-2xl">
-                <img
-                    src={requestToCallBackBanner}
-                    alt=""
-                    className="w-full h-full object-cover rounded-2xl"
-                />
+            <div className="relative w-full md:w-4/12 rounded-2xl">
+                <img src={requestToCallBackBanner} className="w-full h-full object-cover rounded-2xl" />
 
-                {/* Text at bottom of image */}
-                <div className="absolute bottom-4  text-white text-lg font-medium p-10 rounded w-full text-center text-[28px] font-heading">
-                    Repair Wala Service repairs your home appliaces
+                <div className="absolute bottom-4 text-white text-lg font-medium p-4 sm:p-10 w-full text-center text-[20px] sm:text-[28px] font-heading">
+                    Repair Wala Service repairs your home appliances
                 </div>
             </div>
 
+            <div className="flex-1 bg-accent p-8 rounded-2xl">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[36px]">
 
+                    <h1 className="font-heading text-[32px] text-primary">Fill the Form to Request Free Call Back</h1>
 
+                    {/* PERSONAL DETAILS */}
+                    <h1 className="font-heading text-[20px] text-primary">Personal Details</h1>
 
-            {/* Contact Form */}
-            <div className="flex-1 bg-accent p-8 w-auto rounded-2xl">
-
-                <form onSubmit={handleSubmit(onSubmit)} className="flex w-full  flex-col gap-[36px]">
-                    <h1 className="font-medium font-heading text-[32px] text-primary">Fill the Form to <br />
-                        Request Free Call Back
-                    </h1>
-
-                    {/* FirstName,LastName,Email,Phone No Div Box */}
-                    <div className="flex flex-col gap-[20px] w-full">
-                        <span className="flex flex-row gap-[26px] w-full ">
-                            <InputBox label="First Name" id="firstName" placeholder="Enter  First Name" register={register} required={true} type="text" className={'w-1/2'} />
-                            <InputBox label="Last Name" id="lastName" placeholder="Enter  Last Name" register={register} required={true} type="text" className={'w-1/2'} />
-
-                        </span>
-                        <span className="flex flex-row gap-[26px] w-full">
-                            <InputBox label="Email" id="email" placeholder="Enter  E-Mail" register={register} required={true} type="email" className={'w-1/2'} />
-                            <InputBox label="Phone Number" id="phoneNo" placeholder="Enter  Phone Number" register={register} required={true} type="number" className={'w-1/2'} />
-
-                        </span>
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <InputBox id="firstName" label="First Name" placeholder="Enter First Name" register={register} required />
+                        <InputBox id="lastName" label="Last Name" placeholder="Enter Last Name" register={register} required />
                     </div>
 
-                    {/* Service Location Address Div Box*/}
-                    <h1 className="font-medium font-heading text-[20px] text-primary">Service Location Address</h1>
-                    <div className="flex flex-col gap-[20px]">
-                        <InputBox label="Stress Address" id="stressAddress" placeholder="Enter Address (Flat no., Building No., Landmarks)" register={register} required={true} type="text" className={'w-full'} />
-
-                        <span className="flex flex-row gap-[26px]" >
-                            <SelectBox label="City" id="city" register={register} options={["Delhi", "Mumbai", "Bhopal", "Indore"]} />
-                            <SelectBox label="State" id="state" register={register} options={["DH", "MH", "UP", "Mp"]} />
-                        </span>
-                        <InputBox label="Postal/Zip Code" id="zipCode" placeholder="Enter Postal / Zip Code" register={register} required={true} type="number" className={''} />
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <InputBox id="email" label="Email" placeholder="Enter Email" register={register} required type="email" />
+                        <InputBox id="phoneNo" label="Phone Number" placeholder="Enter Phone Number" register={register} required type="number" />
                     </div>
 
-                    {/* Product Details div Box */}
-                    <h1 className="font-medium font-heading text-[20px] text-primary">Product Details</h1>
+                    {/* ADDRESS */}
+                    <h1 className="font-heading text-[20px] text-primary">Service Location Address</h1>
 
-                    <div className="flex flex-col gap-[20px]">
+                    <InputBox id="streetAddress" label="Street Address" placeholder="Full Address" register={register} required />
 
-                        <span className="flex flex-row gap-[26px]" >
-                            <SelectBox label="Type" id="type" register={register} options={["MicroWave", "T.V", "Refrigerator", "Other"]} />
-                            <SelectBox label="Brand" id="brand" register={register} options={["L.G", "Samsung", "Hevels", "Sony"]} />
-
-                        </span>
-                        <span className="flex flex-row gap-[26px] " >
-                            <SelectBox label="Model" id="model" register={register} options={["Solo MicroWave", "GrillMicroWave"]} />
-                            <InputBox label="Appliance Age" id="applianceAge" placeholder="Enter Age of Appliances" register={register} required={true} type="number" className={''} />
-
-                        </span>
-
-                        <TextAreaBox label="Description" id="description" placeholder="Enter..." register={register} required={true} type="text" className={'w-full'} />
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <SelectBox id="city" label="City" options={["Delhi", "Mumbai", "Bhopal", "Indore"]} register={register} />
+                        <SelectBox id="state" label="State" options={["DH", "MH", "UP", "MP"]} register={register} />
                     </div>
+
+                    <InputBox id="zipCode" label="Postal / Zip Code" placeholder="Enter Zip Code" register={register} required />
+
+                    {/* PRODUCT DETAILS */}
+                    <h1 className="font-heading text-[20px] text-primary">Product Details</h1>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <SelectBox id="type" label="Type" options={["Microwave", "T.V", "Refrigerator"]} register={register} />
+                        <SelectBox id="brand" label="Brand" options={["LG", "Samsung", "Sony"]} register={register} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <SelectBox id="model" label="Model" options={["Solo Microwave", "Grill Microwave"]} register={register} />
+                        <InputBox id="applianceAge" label="Appliance Age" placeholder="Enter age" type="number" register={register} required />
+                    </div>
+
+                    <TextAreaBox label="Description" id="description" placeholder="Describe the issue..." register={register} required />
 
                     <Button type="submit">SUBMIT</Button>
-
-
                 </form>
             </div>
-
 
         </div>
     );
 };
+
+
 
 export default RequestCallbackForm;

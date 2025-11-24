@@ -62,13 +62,13 @@ const Header = () => {
                 <Link to={"/"}>
                     <img src={logo} alt="Logo" className="w-38 h-auto cursor-pointer" />
                 </Link>
-                <div>
+                {/* <div>
                     <span className="flex flex-row gap-4">
                         <span className="cursor-pointer"><User /></span>
                         <span className="cursor-pointer" onClick={() => setCart(!cart)}><ShoppingCart /></span>
                     </span>
 
-                </div>
+                </div> */}
             </div>
 
 
@@ -106,18 +106,18 @@ const Header = () => {
                             <Button >Search</Button>
                         </div>
                         {/* {left div} */}
-                        <div className="flex items-center justify-center gap-4">
+                        {/* <div className="flex items-center justify-center gap-4">
                             <div className="flex flex-row items-center gap-2">
                                 <Link to={'/profile'}><User /></Link>
-                                <Link to={'/login'}>
+                                {<Link to={'/login'}>
                                     <h1 className="text-[14px] font-para font-light ">Sign in <br />
                                         <span className="text-[16px] font-para font-semibold "> User Account</span>
                                     </h1>
-                                </Link>
+                                </Link>}
 
                             </div>
                             <span className="cursor-pointer" onClick={() => setCart(!cart)}><ShoppingCart /></span>
-                        </div>
+                        </div> */}
 
                     </div>
 

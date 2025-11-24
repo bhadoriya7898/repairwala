@@ -1,0 +1,120 @@
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Briefcase, 
+  History, 
+  User, 
+  LogOut,
+  Menu,
+  X
+} from 'lucide-react';
+import { useState } from 'react';
+
+export const EmployeeDashboardLayout = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Add logout logic here
+    navigate('/');
+  };
+
+  const navItems = [
+    { path: '/employee/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/employee/jobs', icon: Briefcase, label: 'Assigned Jobs' },
+    { path: '/employee/history', icon: History, label: 'Work History' },
+    { path: '/employee/profile', icon: User, label: 'Profile Settings' },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
+            >
+              {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+            <img 
+              src="/src/assets/Images/Logo.png" 
+              alt="RepairWala Logo" 
+              className="h-10 w-auto"
+            />
+            {/* <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">
+              Employee Panel
+            </h1> */}
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600 font-para hidden sm:block">
+              Welcome, Employee
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside
+          className={`${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          } fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col`}
+        >
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-para ${
+                    isActive
+                      ? 'bg-[#00A884] text-white shadow-md'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`
+                }
+              >
+                <item.icon size={20} />
+                <span className="font-medium">{item.label}</span>
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* Logout Button */}
+          <div className="p-4 border-t border-gray-200">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-para"
+            >
+              <LogOut size={20} />
+              <span className="font-medium">Logout</span>
+            </button>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6 lg:p-8">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 py-4 px-6">
+        <div className="text-center text-sm text-gray-600 font-para">
+          © 2025 RepairWala. All rights reserved.
+        </div>
+      </footer>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
