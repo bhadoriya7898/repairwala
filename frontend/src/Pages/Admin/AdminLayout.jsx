@@ -27,7 +27,7 @@ export function AdminLayout() {
     { path: '/admin/complaints', icon: ClipboardList, label: 'Complaints' },
     { path: '/admin/services', icon: Wrench, label: 'Services' },
     { path: '/admin/customers', icon: UserCircle, label: 'Customers' },
-    { path: '/admin/reports', icon: FileText, label: 'Reports' },
+    { path: '/admin/reports', icon: FileText, label: 'Employee Requests' },
   ];
 
   return (

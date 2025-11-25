@@ -203,55 +203,66 @@ export function ManageEmployees() {
       )}
 
       {/* Edit Employee Modal */}
-      {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Edit Employee</h2>
-              <button onClick={() => setShowEditModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X size={24} />
-              </button>
-            </div>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
-              />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
-              />
-              <input
-                type="text"
-                placeholder="Role"
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
-              />
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
-              >
-                <option value="Active">Active</option>
-                <option value="Suspended">Suspended</option>
-              </select>
-              <button
-                onClick={handleEditEmployee}
-                className="w-full bg-[#00A884] hover:bg-[#008f6f] text-white py-3 rounded-xl font-semibold transition-all"
-              >
-                Update Employee
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    {/* Add Employee Modal */}
+{showAddModal && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Add New Employee</h2>
+        <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+          <X size={24} />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+
+        {/* First Name */}
+        <input
+          type="text"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884]"
+        />
+
+        {/* Last Name */}
+        <input
+          type="text"
+          placeholder="Last Name"
+          value={formData.lastName}
+          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884]"
+        />
+
+        {/* Email */}
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884]"
+        />
+
+        {/* Password */}
+        <input
+          type="password"
+          placeholder="Password (min 6 characters)"
+          value={formData.password}
+          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884]"
+        />
+        {/* Submit */}
+        <button
+          onClick={handleAddEmployee}
+          className="w-full bg-[#00A884] hover:bg-[#008f6f] text-white py-3 rounded-xl font-semibold transition-all"
+        >
+          Add Employee
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
