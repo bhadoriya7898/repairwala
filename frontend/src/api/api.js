@@ -3,16 +3,16 @@ import api from "./axiosInstance";
 /* ---------------- AUTH API ---------------- */
 
 // Signup
-export const signupAPI = (data) => api.post("/auth/signup", data);
+export const signupAPI = (data) => api.post("/api/auth/signup", data);
 
 // Login
-export const loginAPI = (data) => api.post("/auth/login", data);
+export const loginAPI = (data) => api.post("/api/auth/login", data);
 
 // Forgot Password
-export const forgotPasswordAPI = (data) => api.post("/auth/forgot-password", data);
+export const forgotPasswordAPI = (data) => api.post("/api/auth/forgot-password", data);
 
 // Reset Password
-export const resetPasswordAPI = (data) => api.post("/auth/reset-password", data);
+export const resetPasswordAPI = (data) => api.post("/api/auth/reset-password", data);
 
 
 /* ---------------- ADMIN API ---------------- */
