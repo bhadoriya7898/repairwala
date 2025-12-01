@@ -6,7 +6,16 @@ const ServiceCard = () => {
     const [selectedCategory, setSelectedCategory] = useState("Telivision");
 
     return (
-        <div className="flex w-full flex-col md:flex-row gap-5 my-20">
+        <div
+            className="
+                grid 
+                grid-cols-1 
+                lg:grid-cols-[293px_1fr] 
+                gap-5 
+                my-10 
+                w-full
+            "
+        >
             <ServiceSideCard
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}

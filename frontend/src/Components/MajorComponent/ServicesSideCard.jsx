@@ -7,32 +7,40 @@ const serviceList = [
     "Window Air Conditioners",
     "Refrigerators",
     "Washing Machines",
-    "Water purifier",
+    "water purifier",
     "Microwave Ovens",
 ];
 
-const ServiceSideCard = ({ selectedCategory, setSelectedCategory }) => {
+const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
     return (
         <div
-            className="bg-accent rounded-3xl p-5 flex flex-col gap-10"
+            className="
+                bg-accent 
+                rounded-3xl 
+                p-5 
+                flex 
+                flex-col 
+                gap-10 
+                w-full 
+                h-auto
+            "
             style={{
-                width: "293px",
-                height: "679px",
-                opacity: 1,
-                flexShrink: 0,
+                maxHeight: "679px",
             }}
         >
-            <h1 className="text-primary inline-flex items-center font-heading font-bold text-[28px]">
+            <h1 className="text-primary font-heading font-bold text-[24px] flex items-center gap-1">
                 Repairwala Products Repair Services
-                <CgArrowTopRight size={18} />
+                <CgArrowTopRight size={20} />
             </h1>
 
-            <div className="flex flex-col gap-3 overflow-y-auto">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3 lg:flex-col overflow-y-auto">
                 {serviceList.map((item) => (
-                    <div
+                    <button
                         key={item}
                         onClick={() => setSelectedCategory(item)}
-                        className={`px-1.5 py-2.5 rounded-xl w-fit font-medium font-heading text-para cursor-pointer 
+                        className={`
+                            px-3 py-2 rounded-xl font-heading text-para 
+                            transition-all
                             ${
                                 selectedCategory === item
                                     ? "bg-white shadow"
@@ -41,11 +49,11 @@ const ServiceSideCard = ({ selectedCategory, setSelectedCategory }) => {
                         `}
                     >
                         {item}
-                    </div>
+                    </button>
                 ))}
             </div>
         </div>
     );
 };
 
-export default ServiceSideCard;
+export default ServicesSideCard;
