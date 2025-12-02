@@ -13,7 +13,9 @@ import { ManageEmployees } from './Pages/Admin/ManageEmployees';
 import { ManageComplaints } from './Pages/Admin/ManageComplaints';
 import { ManageServices } from './Pages/Admin/ManageServices';
 import { ManageCustomers } from './Pages/Admin/ManageCustomers';
-// import { AdminReports } from './Pages/Admin/AdminReports';
+
+import Categories from "./Pages/Admin/Categories";  
+import Brand from "./Pages/Admin/Brand"; 
 
 import { AdminLayout } from './Pages/Admin/AdminLayout';
 
@@ -68,7 +70,8 @@ function App() {
             <Route path="complaints" element={<ManageComplaints />} />
             <Route path="services" element={<ManageServices />} />
             <Route path="customers" element={<ManageCustomers />} />
-            {/* <Route path="reports" element={<AdminReports />} /> */}
+            <Route path="categories" element={<Categories />} />
+            <Route path="brands" element={<Brand />} />
           </Route>
 
 

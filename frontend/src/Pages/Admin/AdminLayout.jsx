@@ -8,7 +8,9 @@ import {
   FileText,  
   LogOut,
   Menu,
-  X
+  X,
+  Layers3,
+  Tags
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -27,7 +29,8 @@ export function AdminLayout() {
     { path: '/admin/complaints', icon: ClipboardList, label: 'Complaints' },
     { path: '/admin/services', icon: Wrench, label: 'Services' },
     { path: '/admin/customers', icon: UserCircle, label: 'Customers' },
-    // { path: '/admin/reports', icon: FileText, label: 'Employee Requests' },
+     { path: '/admin/categories', icon: Layers3, label: 'Categories' },
+  { path: '/admin/brands', icon: Tags, label: 'Brands' },
   ];
 
   return (

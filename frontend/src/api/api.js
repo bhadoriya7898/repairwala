@@ -9,27 +9,27 @@ export const signupAPI = (data) => api.post("/api/auth/signup", data);
 export const loginAPI = (data) => api.post("/api/auth/login", data);
 
 // Forgot Password
-export const forgotPasswordAPI = (data) => api.post("/api/auth/forgot-password", data);
+export const forgotPasswordAPI = (data) =>
+  api.post("/api/auth/forgot-password", data);
 
 // Reset Password
-export const resetPasswordAPI = (data) => api.post("/api/auth/reset-password", data);
+export const resetPasswordAPI = (data) =>
+  api.post("/api/auth/reset-password", data);
 
 
-/* ---------------- ADMIN API ---------------- */
+/* ---------------- ADMIN EMPLOYEE API ---------------- */
 
-// Approve Employee
+// Pending employees
 export const getPendingEmployeesAPI = () =>
   api.get("/admin/pending-employees");
 
 // Approve employee
-export const approveEmployeeAPI = (id) =>
-  api.post(`/admin/approve/${id}`);
+export const approveEmployeeAPI = (id) => api.post(`/admin/approve/${id}`);
 
 // Reject employee
-export const rejectEmployeeAPI = (id) =>
-  api.post(`/admin/reject/${id}`);
+export const rejectEmployeeAPI = (id) => api.post(`/admin/reject/${id}`);
 
-// (Optional) Get all employees
+// Get all employees
 export const getEmployeesAPI = () => api.get("/admin/employees");
 
 
@@ -37,3 +37,34 @@ export const getEmployeesAPI = () => api.get("/admin/employees");
 
 export const employeeDashboardAPI = () => api.get("/employee/dashboard");
 
+
+/* ---------------- CATEGORY API ---------------- */
+
+// Get all categories
+export const getCategoriesAPI = () => api.get("/api/categories");
+
+// Add category
+export const addCategoryAPI = (formData) =>
+  api.post("/api/categories", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+// Delete category
+export const deleteCategoryAPI = (id) =>
+  api.delete(`/api/categories/${id}`);
+
+
+/* ---------------- BRAND API ---------------- */
+
+// Get all brands
+export const getBrandsAPI = () => api.get("/api/brands");
+
+// Add brand
+export const addBrandAPI = (formData) =>
+  api.post("/api/brands", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+// Delete brand
+export const deleteBrandAPI = (id) =>
+  api.delete(`/api/brands/${id}`);
