@@ -1,7 +1,7 @@
 import React, { use, useState } from "react";
 import { CategoriesDivBanner, logo, MobileNavBanner } from "../../assets/Images/index.js";
 import Button from "../MinorComponent/Button";
-import { categories, mobileNavItems, navItems } from "../../utils/Home.utils";
+import {mobileNavItems, navItems } from "../../utils/Home.utils";
 import { Link, NavLink } from "react-router-dom";
 import { User, AlignLeft, ShoppingCart } from 'lucide-react';
 import { refrigerators } from "../../assets/Images/Categories/index.js";

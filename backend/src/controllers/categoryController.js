@@ -8,12 +8,8 @@ export const createCategory = async (req, res) => {
 
     // FIX: Save only public path
 const imagePath = req.file
-  ? `uploads/categories/${req.file.filename}`  // NO src/, NO backslash
+  ? `uploads/categories/${req.file.filename}` 
   : null;
-
-
-
-
 
     const newCategory = await Category.create({
       name,

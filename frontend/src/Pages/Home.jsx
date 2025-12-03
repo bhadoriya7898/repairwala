@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "../Components/MinorComponent/Button";
-import { categories } from "../utils/Home.utils.jsx";
+import { getCategoriesAPI } from "../api/api.js";
 import { logo } from "../assets/Images/index.js";
 import { s1banner1, s1Sidebanner1, s1Sidebanner2, s2banner1, s3banner1, s5banner1, s5banner2, s5banner3, s5banner4, s5banner5, s6banner1 } from "../assets/Images/Hero/index.js";
 import ServiceCard from "../Components/MajorComponent/ServiceCard.jsx";
@@ -8,12 +8,29 @@ import RequestCallbackForm from "../Components/MajorComponent/RequestCallBackFor
 import TestimonialBox from "../Components/MajorComponent/TestimonialBox.jsx";
 import FrezzerBanner from "../Components/MinorComponent/FrezzerBanner.jsx";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 
 
 const Home = () => {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+
+    // ⭐ Fetch Categories from Backend
+    const fetchCategories = async () => {
+        try {
+            const res = await getCategoriesAPI();
+            console.log("CATEGORIES:", res.data);
+            setCategories(res.data); // backend returns ARRAY
+        } catch (error) {
+            console.log("Category Fetch Error:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
 
     return (
         <>
@@ -37,9 +54,9 @@ const Home = () => {
                         <div className="flex flex-col justify-between w-full h[185px] bg-cover bg-center rounded-2xl text-white p-4 md:h-1/2 " style={{ backgroundImage: `url(${s1Sidebanner1})` }}>
                             <p className="pb-4 font-para font-light text-[14px]">Your Local Appliance Repair Service Expert</p>
                             <h1 className="pb-4 font-bold text-[24px] ">Skilled, Affordable Service <br />
-                            on Your Schedule
+                                on Your Schedule
                             </h1>
-                            <Button onClick={()=>navigate('/appointment')}>Book Appointment</Button>
+                            <Button onClick={() => navigate('/appointment')}>Book Appointment</Button>
                         </div>
                         {/* sub Div2 Banner 2 */}
                         <div
@@ -58,24 +75,30 @@ const Home = () => {
                 </div>
 
                 {/* Categories Div in Section 1 Below Banner Div */}
-                <div className="flex items-center lg:justify-center gap-x-12 h-60 w-full overflow-x-auto overflow-y-hidden  scrollbar-hide">
+<div className="grid w-full grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-6 p-4">
+  {categories.map((categorie, idx) => (
+    <div
+      key={idx}
+      className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden"
+    >
+      {/* IMAGE BOX — Totally No Border */}
+      <div className="w-full h-40 flex items-center justify-center bg-white">
+        <img
+          src={`http://localhost:5000/${categorie.image}`}
+          alt={categorie.name}
+          className="h-full object-contain p-3"
+        />
+      </div>
 
-                    {/* Categories List under Catergories div */}
-                    {categories.map((categorie, idx) => (
-                        <div
-                            key={idx}
-                            className="flex-shrink-0 flex flex-col items-center w-36 h-52 border-2 border-accent border-solid"
-                        >
-                            <span className="w-full h-[70%] flex justify-center items-center">
-                                <img className="max-h-full object-contain" src={categorie.image} alt={categorie.name} />
-                            </span>
-                            <span className="bg-accent w-full h-[30%] flex justify-center items-center text-center text-[16px] font-heading font-normal text-black">
-                                {categorie.name}
-                            </span>
-                        </div>
-                    ))}
-
-                </div>
+      {/* TITLE BOX */}
+      <div className="bg-accent text-center py-3">
+        <p className="text-[16px] font-heading text-black">
+          {categorie.name}
+        </p>
+      </div>
+    </div>
+  ))}
+</div>
 
             </section >
 
@@ -91,7 +114,7 @@ const Home = () => {
                             relationship is <b>communication</b></h1>
                             <h1 className="font-normal font-heading text-para text-primary-text">Multiple ways to reach us.</h1>
                         </span>
-                        <Button onClick={()=>navigate("/appointment")} className="" >Book Now</Button>
+                        <Button onClick={() => navigate("/appointment")} className="" >Book Now</Button>
                     </div>
 
                     <div className=" flex justify-between items-end flex-col  gap-y-2.5 flex-wrap font-heading font-normal text-[16px] ">
@@ -223,7 +246,7 @@ const Home = () => {
                             </div>
 
                             <div>
-                                <Button  onClick={()=>navigate("/services")}>View Services</Button>
+                                <Button onClick={() => navigate("/services")}>View Services</Button>
                             </div>
 
                         </div>
@@ -281,11 +304,11 @@ const Home = () => {
             {/* Section 8 What our client Says About Us (Client Testimonials) */}
 
             <section className="flex items-center justify-center my-10 flex-col ">
-                    {/* <h1>What Our Clients Say About Us</h1> */}
-                    <div className="w-full flex overflow-x-scroll">
-                        <TestimonialBox/>
-                    </div>
-            
+                {/* <h1>What Our Clients Say About Us</h1> */}
+                <div className="w-full flex overflow-x-scroll">
+                    <TestimonialBox />
+                </div>
+
             </section>
 
 

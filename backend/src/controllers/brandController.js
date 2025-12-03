@@ -47,3 +47,31 @@ export const deleteBrand = async (req, res) => {
     res.status(500).json({ error: "Delete failed" });
   }
 };
+
+export const getBrandCategories = async (req, res) => {
+  try {
+    const categories = await Brand.distinct("category");
+    const populated = await Category.find({ _id: { $in: categories } });
+
+    res.json({ success: true, data: populated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching categories" });
+  }
+};
+
+
+export const getBrandsByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    const brands = await Brand.find({ category })
+      .populate("category")
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, data: brands });
+
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching brands" });
+  }
+};
+

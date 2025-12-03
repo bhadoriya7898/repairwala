@@ -21,21 +21,21 @@ export const resetPasswordAPI = (data) =>
 
 // Pending employees
 export const getPendingEmployeesAPI = () =>
-  api.get("/admin/pending-employees");
+  api.get("/api/admin/pending-employees");
 
 // Approve employee
-export const approveEmployeeAPI = (id) => api.post(`/admin/approve/${id}`);
+export const approveEmployeeAPI = (id) => api.post(`/api/admin/approve/${id}`);
 
 // Reject employee
-export const rejectEmployeeAPI = (id) => api.post(`/admin/reject/${id}`);
+export const rejectEmployeeAPI = (id) => api.post(`/api/admin/reject/${id}`);
 
 // Get all employees
-export const getEmployeesAPI = () => api.get("/admin/employees");
+export const getEmployeesAPI = () => api.get("/api/admin/employees");
 
 
 /* ---------------- EMPLOYEE API ---------------- */
 
-export const employeeDashboardAPI = () => api.get("/employee/dashboard");
+export const employeeDashboardAPI = () => api.get("/api/employee/dashboard");
 
 
 /* ---------------- CATEGORY API ---------------- */
@@ -68,3 +68,14 @@ export const addBrandAPI = (formData) =>
 // Delete brand
 export const deleteBrandAPI = (id) =>
   api.delete(`/api/brands/${id}`);
+
+
+
+/* ---------------- DYNAMIC SERVICE PAGE APIS ---------------- */
+
+// ⭐ LEFT SIDE — Get unique categories from brands
+export const getBrandCategoriesAPI = () => api.get("/api/brands/categories");
+
+// ⭐ RIGHT SIDE — Get brands by category ID
+export const getBrandsByCategoryAPI = (categoryId) =>
+  api.get(`/api/brands/filter?category=${categoryId}`);

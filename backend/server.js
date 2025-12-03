@@ -23,7 +23,6 @@ connectDB();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 🔥 STATIC IMAGE PATH (Correct!)
 app.use("/uploads", express.static(path.join(__dirname, "src/uploads")));
 
 // Routes
