@@ -1,20 +1,31 @@
+// ServiceCard.jsx
 import React, { useState } from "react";
-import ServiceSideCard from "./ServicesSideCard";
+import ServicesSideCard from "./ServicesSideCard";
 import ProductCard from "./ProductCard";
 
 const ServiceCard = () => {
-    const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
-    return (
-        <div className="grid grid-cols-1 lg:grid-cols-[293px_1fr] gap-5 my-10 w-full">
-            <ServiceSideCard
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-            />
+  return (
+    <section className="w-full my-6">
+<div className="flex flex-col lg:flex-row gap-5 max-[500px]:gap-3 w-full">
 
-            <ProductCard selectedCategory={selectedCategory} />
+        {/* LEFT SECTION */}
+        <div className="lg:w-[320px] w-full">
+          <ServicesSideCard
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+          />
         </div>
-    );
+
+        {/* RIGHT SECTION */}
+        <div className="flex-1 w-full">
+          <ProductCard selectedCategory={selectedCategory} />
+        </div>
+
+      </div>
+    </section>
+  );
 };
 
 export default ServiceCard;

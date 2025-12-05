@@ -103,47 +103,78 @@ const Home = () => {
             </section >
 
             {/* Section 2 Of Home Page includes Communications details and Banner */}
-            <section className="flex  gap-y-2.5  w-full h-auto my-20 flex-col">
+         <section className="flex flex-col w-full my-20 gap-10">
 
-                {/*  Communication details div */}
+  {/* Communication details div */}
+  <div className="w-full flex flex-col md:flex-row justify-between gap-10">
 
-                <div className=" w-full flex itesms-center justify-between md:h-auto flex-col md:flex-row gap-8 " >
+    {/* Left Side Text + Button */}
+    <div className="flex flex-col gap-4 md:w-1/2">
+      <h1 className="font-heading font-bold text-[26px] md:text-[32px] text-primary-text leading-tight">
+        The key to a long lasting <br />
+        relationship is <b>communication</b>
+      </h1>
 
-                    <div className="flex items-center md:items-start justify-between flex-row md:flex-col w-full md:w-auto gap-4">
-                        <span><h1 className="font-heading font-bold text-[28px] text-primary-text">The key to a long lasting <br />
-                            relationship is <b>communication</b></h1>
-                            <h1 className="font-normal font-heading text-para text-primary-text">Multiple ways to reach us.</h1>
-                        </span>
-                        <Button onClick={() => navigate("/appointment")} className="" >Book Now</Button>
-                    </div>
+      <p className="font-normal font-heading text-para text-primary-text">
+        Multiple ways to reach us.
+      </p>
 
-                    <div className=" flex justify-between items-end flex-col  gap-y-2.5 flex-wrap font-heading font-normal text-[16px] ">
+      <Button 
+        onClick={() => navigate("/appointment")} 
+        className="w-max"
+      >
+        Book Now
+      </Button>
+    </div>
 
-                        <div className="flex gap-2.5">
-                            <span className="bg-accent px-7.5 py-2.5 rounded-xl border-1 border-accent">Helpline number: 1800 266 1880 </span>
-                            <span className=" px-7.5 py-2.5 rounded-xl border-1 border-accent">Email: service.in@bosch-home.com</span>
-                        </div>
+    {/* Right Side Contact Options */}
+    <div className="flex flex-col gap-4 font-heading text-[15px] md:w-1/2">
 
-                        <div className="flex gap-2.5">
-                            <span className=" px-7.5 py-2.5 rounded-xl border-1 border-accent">Chat with us via WhatsApp: +918451000555</span>
-                            <span className="bg-accent px-7.5 py-2.5 rounded-xl border-1 border-accent">Book appointment online </span>
-                        </div>
+      {/* Row 1 */}
+      <div className="flex flex-col sm:flex-row gap-4 w-full">
+        <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
+          Helpline: 1800 266 1880
+        </span>
 
-                        <div className="flex gap-2.5">
-                            <span className=" px-7.5 py-2.5 rounded-xl border-1 border-accent">SMS Service: Please send an SMS to 9133711006 by typing- BSH "Your Pincode".  </span>
+        <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
+          Email: service.in@bosch-home.com
+        </span>
+      </div>
 
-                        </div>
-                    </div>
-                </div>
+      {/* Row 2 */}
+      <div className="flex flex-col sm:flex-row gap-4 w-full">
+        <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
+          WhatsApp: +91 84510 00555
+        </span>
 
-                {/* Banner div Under communication div */}
+        <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
+          Book appointment online
+        </span>
+      </div>
 
-                <div className="w-full h-91.5 rounded-2xl relative bg-cover bg-center" style={{ backgroundImage: `url(${s2banner1})` }}>
-                    <img className="w-42.5 h-10 left-7.5 top-7.5 absolute" src={logo} />
-                </div>
+      {/* Row 3 */}
+      <div className="flex">
+        <span className="w-full text-center px-6 py-3 rounded-xl border border-accent">
+SMS: Send "BSH &lt;your pincode&gt;" to 9133711006
+        </span>
+      </div>
 
+    </div>
+  </div>
 
-            </section>
+  {/* Banner Below */}
+  <div 
+    className="w-full h-[350px] rounded-2xl relative bg-cover bg-center"
+    style={{ backgroundImage: `url(${s2banner1})` }}
+  >
+    <img 
+      src={logo} 
+      alt="Logo"
+      className="w-[170px] h-auto absolute left-6 top-6"
+    />
+  </div>
+
+</section>
 
             {/* Section 3 of Home Page */}
             <section className="flex items-center justify-center w-full h-auto ">

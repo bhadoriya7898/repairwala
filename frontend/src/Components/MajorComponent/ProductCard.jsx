@@ -1,40 +1,50 @@
+// ProductCard.jsx
 import React, { useEffect, useState } from "react";
 import CategoriesCard from "../MinorComponent/CategoriesCard";
 import { getBrandsByCategoryAPI } from "../../api/api.js";
 
-
 const ProductCard = ({ selectedCategory }) => {
-    const [brands, setBrands] = useState([]);
+  const [brands, setBrands] = useState([]);
 
- const fetchBrands = async () => {
-    if (!selectedCategory) return;
-    try {
-        const res = await getBrandsByCategoryAPI(selectedCategory);
-        setBrands(res.data.data);
-    } catch (error) {
-        console.log("Error fetching brands", error);
-    }
-};
+  useEffect(() => {
+    const fetchBrands = async () => {
+      if (!selectedCategory) return;
+      const res = await getBrandsByCategoryAPI(selectedCategory);
+      setBrands(res.data.data);
+    };
+    fetchBrands();
+  }, [selectedCategory]);
 
+return (
+  <div
+    className="
+      w-full 
+      lg:h-[679px] lg:overflow-y-auto pr-2
 
-    useEffect(() => {
-        fetchBrands();
-    }, [selectedCategory]);
+      max-[500px]:w-full
+      max-[500px]:overflow-visible
+      max-[500px]:h-auto
+    "
+  >
+    <div
+      className="
+        grid
 
-    return (
-       <div
-  className="
-    w-[921px]
-    grid
-    grid-cols-3
-    gap-[15px]
-  "
->
-    {brands.map((b, i) => (
+        max-[500px]:grid-cols-2
+        max-[500px]:gap-4
+
+        sm:grid-cols-2
+        lg:grid-cols-3
+        lg:gap-6
+      "
+    >
+      {brands.map((b, i) => (
         <CategoriesCard key={i} data={b} />
-    ))}
-</div>
-    );
+      ))}
+    </div>
+  </div>
+);
+
 };
 
 export default ProductCard;

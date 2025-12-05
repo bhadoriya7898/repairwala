@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthContainer from "../Components/MajorComponent/AuthContainer";
 import { logo } from "../assets/Images/index.js";
 import InputBox from "../Components/MinorComponent/InputBox";
@@ -13,25 +13,24 @@ import { loginAPI } from "../api/api";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
+    if (loading) return; // 🛑 Prevent multi-clicks
+
+    setLoading(true);
+
     try {
-      // Call API
       const res = await loginAPI({
         email: data.email,
         password: data.password,
       });
 
-      // Save token & role
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
 
-      // Redirect according to role
       if (res.data.role === "admin") {
         navigate("/admin/dashboard");
       } else {
@@ -39,16 +38,16 @@ const Login = () => {
       }
 
       alert("Login Successful!");
-
     } catch (err) {
       alert(err.response?.data?.msg || "Invalid credentials!");
+    } finally {
+      setLoading(false); // re-enable button
     }
   };
 
   return (
     <AuthContainer>
       <div className="w-[420px] flex flex-col gap-[50px] px-3 py-5">
-
         {/* Top Div Include Logo And Title */}
         <div className="flex flex-col gap-[30px] items-center justify-center">
           <span>
@@ -98,9 +97,16 @@ const Login = () => {
             />
           </span>
 
-          <Button type="submit" className="w-full max-w-none justify-center">
-            Sign In
-          </Button>
+          {/* Login Button (Disabled During Request) */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full max-w-none justify-center px-4 py-3 rounded-xl text-white 
+              ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}
+            `}
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
 
           <DashedLine>OR</DashedLine>
 
