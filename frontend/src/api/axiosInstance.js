@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://repairwala.vercel.app/",
+  baseURL: "https://repairwalaunitech.onrender.com",
 });
 
 api.interceptors.request.use((config) => {
