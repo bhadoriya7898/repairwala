@@ -15,36 +15,42 @@ const ProductCard = ({ selectedCategory }) => {
     fetchBrands();
   }, [selectedCategory]);
 
-return (
+  return (
+   <div
+  className="
+    w-full 
+
+    /* DESKTOP */
+    lg:h-[679px] lg:overflow-y-auto pr-2
+
+    /* MOBILE — only card list scrolls */
+    max-[480px]:h-[530px]
+    max-[480px]:overflow-y-scroll
+  "
+>
   <div
     className="
-      w-full 
-      lg:h-[679px] lg:overflow-y-auto pr-2
+      grid
 
-      max-[500px]:w-full
-      max-[500px]:overflow-visible
-      max-[500px]:h-auto
+      /* MOBILE: 1 card per row + clear spacing */
+      max-[480px]:grid-cols-1
+      max-[480px]:gap-5
+
+      /* TABLET */
+      sm:grid-cols-2
+
+      /* DESKTOP */
+      lg:grid-cols-3
+      lg:gap-6
     "
   >
-    <div
-      className="
-        grid
-
-        max-[500px]:grid-cols-2
-        max-[500px]:gap-4
-
-        sm:grid-cols-2
-        lg:grid-cols-3
-        lg:gap-6
-      "
-    >
-      {brands.map((b, i) => (
-        <CategoriesCard key={i} data={b} />
-      ))}
-    </div>
+    {brands.map((b, i) => (
+      <CategoriesCard key={i} data={b} />
+    ))}
   </div>
-);
+</div>
 
+  );
 };
 
 export default ProductCard;

@@ -1,4 +1,3 @@
-// ServicesSideCard.jsx
 import React, { useEffect, useState } from "react";
 import { CgArrowTopRight } from "react-icons/cg";
 import { getBrandCategoriesAPI } from "../../api/api.js";
@@ -8,21 +7,22 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const res = await getBrandCategoriesAPI();
-        setCategories(res.data.data);
-      } catch (err) {
-        console.log("Category Fetch Error:", err);
-      }
+      const res = await getBrandCategoriesAPI();
+      setCategories(res.data.data);
     };
     fetchCategories();
   }, []);
 
-  // Default category = Television
+  // ⭐ DEFAULT SELECT TELEVISION
   useEffect(() => {
     if (categories.length > 0 && !selectedCategory) {
-      const tv = categories.find((c) => c.name === "Television");
-      if (tv) setSelectedCategory(tv._id);
+      const tv = categories.find((c) =>
+        c.name.toLowerCase().includes("tele")
+      );
+
+      if (tv) {
+        setSelectedCategory(tv._id);
+      }
     }
   }, [categories]);
 
@@ -30,45 +30,37 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
     <aside
       className="
         bg-[#C6DBDB] rounded-2xl p-5 flex flex-col gap-8
+
         lg:w-[320px] lg:h-[679px]
 
-        /* MOBILE Figma */
-        max-[400px]:w-full
-max-[400px]:h-auto
-
-        max-[400px]:rounded-[20px]
-        max-[400px]:p-4
-        max-[400px]:gap-4
+        max-sm:w-full
+        max-sm:h-auto
+        max-sm:rounded-[20px]
+        max-sm:p-4
+        max-sm:gap-4
       "
     >
-      {/* Heading */}
-      <div className="flex items-center gap-2 max-[400px]:gap-1">
+      <div className="flex items-center gap-2 max-sm:gap-1">
         <h1
-          className="text-[#586082] font-bold lg:text-[28px]"
+          className="text-[#586082] font-bold lg:text-[35px]"
           style={{
             fontFamily: "ABC Repro",
             lineHeight: "30px",
-            fontSize: "30px",
+            fontSize: "25px",
           }}
         >
           Repairwala Products Repair Services
         </h1>
 
-        <CgArrowTopRight
-          className="text-[#586082]"
-          size={50}
-        />
+        <CgArrowTopRight className="text-[#586082]" size={42} />
       </div>
 
-      {/* Category Pills */}
       <div
         className="
           flex flex-col gap-3
-
-          /* MOBILE layout */
-          max-[400px]:flex-row
-          max-[400px]:flex-wrap
-          max-[400px]:gap-2
+          max-sm:flex-row
+          max-sm:flex-wrap
+          max-sm:gap-2
         "
       >
         {categories.map((cat) => (
@@ -77,13 +69,12 @@ max-[400px]:h-auto
             onClick={() => setSelectedCategory(cat._id)}
             className={`
               lg:px-10 lg:py-2 lg:text-base rounded-lg font-medium transition-all
-              
-              /* MOBILE sizes */
-              max-[400px]:h-[24px]
-              max-[400px]:rounded-[5px]
-              max-[400px]:px-[10px]
-              max-[400px]:py-[5px]
-              max-[400px]:text-[12px]
+
+              max-sm:h-[26px]
+              max-sm:px-[10px]
+              max-sm:py-[4px]
+              max-sm:text-[12px]
+              max-sm:rounded-[6px]
 
               ${
                 selectedCategory === cat._id

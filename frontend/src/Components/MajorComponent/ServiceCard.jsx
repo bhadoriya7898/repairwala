@@ -8,9 +8,9 @@ const ServiceCard = () => {
 
   return (
     <section className="w-full my-6">
-<div className="flex flex-col lg:flex-row gap-5 max-[500px]:gap-3 w-full">
+      <div className="flex flex-col lg:flex-row gap-5 w-full">
 
-        {/* LEFT SECTION */}
+        {/* LEFT */}
         <div className="lg:w-[320px] w-full">
           <ServicesSideCard
             selectedCategory={selectedCategory}
@@ -18,7 +18,7 @@ const ServiceCard = () => {
           />
         </div>
 
-        {/* RIGHT SECTION */}
+        {/* RIGHT */}
         <div className="flex-1 w-full">
           <ProductCard selectedCategory={selectedCategory} />
         </div>

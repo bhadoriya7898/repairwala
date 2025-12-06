@@ -10,16 +10,15 @@ const CategoriesCard = ({ data }) => {
       className="
         bg-[#E5F2F2] border border-[#C9C9C9]
         rounded-[20px] p-4 flex flex-col gap-3 shadow-sm
-        h-[332px] w-full
+        w-full
 
-        /* MOBILE (189×211) */
-     max-[500px]:w-full
+        /* DESKTOP FIXED HEIGHT */
+        lg:h-[332px]
 
-
-        max-[400px]:h-[211px]
-        max-[400px]:rounded-[12.74px]
-        max-[400px]:p-[6.37px]
-        max-[400px]:gap-[6.37px]
+        /* MOBILE */
+        max-[480px]:rounded-xl
+        max-[480px]:p-3
+        max-[480px]:gap-3
       "
     >
       {/* Image */}
@@ -27,31 +26,23 @@ const CategoriesCard = ({ data }) => {
         className="
           w-full bg-white rounded-[16px] flex items-center justify-center overflow-hidden
 
-          /* MOBILE image */
-          max-[400px]:w-[176px]
-          max-[400px]:h-[119px]
-          max-[400px]:rounded-[12.74px]
+          max-[480px]:h-[150px]
+          max-[480px]:rounded-lg
         "
       >
         <img
-          src={`http://localhost:5000/${data?.brandImage}`}
-          className="object-contain"
+          src={`https://repairwala.vercel.app/${data?.brandImage}`}
+          className="object-contain h-full"
         />
       </div>
 
       {/* Text */}
-      <div
-        className="
-          flex flex-col px-1 gap-1
-
-          /* MOBILE font sizes */
-          max-[400px]:text-[8.92px]
-        "
-      >
-        <p className="text-[14px] max-[400px]:text-[8.92px] text-black">
+      <div className="flex flex-col px-1 gap-1 max-[480px]:text-sm">
+        <p className="text-[14px] text-black">
           {data?.category?.name}
         </p>
-        <h1 className="text-[20px] max-[400px]:text-[12.74px] font-medium">
+
+        <h1 className="text-[20px] max-[480px]:text-base font-semibold">
           {data?.brandName} {data?.productName}
         </h1>
       </div>
@@ -61,23 +52,20 @@ const CategoriesCard = ({ data }) => {
         <button
           onClick={() => navigate("/appointment")}
           className="
-            bg-[#586082] text-white font-bold text-[12px] px-6 py-2 rounded-md
+            bg-[#586082] text-white font-bold text-[12px] 
+            px-6 py-2 rounded-md
 
-            /* MOBILE button */
-            max-[400px]:w-[76px]
-            max-[400px]:h-[25px]
-            max-[400px]:text-[7.65px]
-            max-[400px]:px-[19.11px]
-            max-[400px]:py-[6.37px]
-            max-[400px]:rounded-[3.82px]
+            max-[480px]:px-4
+            max-[480px]:py-2
+            max-[480px]:text-xs
           "
         >
           Book Now
         </button>
 
         <img
-          src={`http://localhost:5000/${data?.brandLogo}`}
-          className="object-contain max-[400px]:h-[20px]"
+          src={`https://repairwala.vercel.app/${data?.brandLogo}`}
+          className="object-contain max-[480px]:h-[22px]"
         />
       </div>
     </div>

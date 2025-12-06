@@ -75,22 +75,37 @@ const Home = () => {
                 </div>
 
                 {/* Categories Div in Section 1 Below Banner Div */}
-<div className="grid w-full grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-6 p-4">
+<div
+  className="
+    w-full p-4
+    flex flex-row 
+    overflow-x-auto whitespace-nowrap 
+    gap-4
+  "
+>
   {categories.map((categorie, idx) => (
     <div
       key={idx}
-      className="flex flex-col bg-white rounded-xl shadow-md overflow-hidden"
+      className="
+        flex flex-col bg-white rounded-xl shadow-md overflow-hidden
+
+        /* CARD WIDTHS DEPENDING ON DEVICE */
+        min-w-[160px]     /* mobile */
+        sm:min-w-[200px]  /* tablet */
+        md:min-w-[240px]  /* small laptop */
+        lg:min-w-[260px]  /* big laptop */
+      "
     >
-      {/* IMAGE BOX — Totally No Border */}
+      {/* IMAGE */}
       <div className="w-full h-40 flex items-center justify-center bg-white">
         <img
-          src={`http://localhost:5000/${categorie.image}`}
+          src={`https://repairwala.vercel.app/${categorie.image}`}
           alt={categorie.name}
           className="h-full object-contain p-3"
         />
       </div>
 
-      {/* TITLE BOX */}
+      {/* TITLE */}
       <div className="bg-accent text-center py-3">
         <p className="text-[16px] font-heading text-black">
           {categorie.name}
@@ -100,81 +115,82 @@ const Home = () => {
   ))}
 </div>
 
+
             </section >
 
             {/* Section 2 Of Home Page includes Communications details and Banner */}
-         <section className="flex flex-col w-full my-20 gap-10">
+            <section className="flex flex-col w-full my-20 gap-10">
 
-  {/* Communication details div */}
-  <div className="w-full flex flex-col md:flex-row justify-between gap-10">
+                {/* Communication details div */}
+                <div className="w-full flex flex-col md:flex-row justify-between gap-10">
 
-    {/* Left Side Text + Button */}
-    <div className="flex flex-col gap-4 md:w-1/2">
-      <h1 className="font-heading font-bold text-[26px] md:text-[32px] text-primary-text leading-tight">
-        The key to a long lasting <br />
-        relationship is <b>communication</b>
-      </h1>
+                    {/* Left Side Text + Button */}
+                    <div className="flex flex-col gap-4 md:w-1/2">
+                        <h1 className="font-heading font-bold text-[26px] md:text-[32px] text-primary-text leading-tight">
+                            The key to a long lasting <br />
+                            relationship is <b>communication</b>
+                        </h1>
 
-      <p className="font-normal font-heading text-para text-primary-text">
-        Multiple ways to reach us.
-      </p>
+                        <p className="font-normal font-heading text-para text-primary-text">
+                            Multiple ways to reach us.
+                        </p>
 
-      <Button 
-        onClick={() => navigate("/appointment")} 
-        className="w-max"
-      >
-        Book Now
-      </Button>
-    </div>
+                        <Button
+                            onClick={() => navigate("/appointment")}
+                            className="w-max"
+                        >
+                            Book Now
+                        </Button>
+                    </div>
 
-    {/* Right Side Contact Options */}
-    <div className="flex flex-col gap-4 font-heading text-[15px] md:w-1/2">
+                    {/* Right Side Contact Options */}
+                    <div className="flex flex-col gap-4 font-heading text-[15px] md:w-1/2">
 
-      {/* Row 1 */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full">
-        <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
-          Helpline: 1800 266 1880
-        </span>
+                        {/* Row 1 */}
+                        <div className="flex flex-col sm:flex-row gap-4 w-full">
+                            <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
+                                Helpline: 1800 266 1880
+                            </span>
 
-        <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
-          Email: service.in@bosch-home.com
-        </span>
-      </div>
+                            <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
+                                Email: service.in@bosch-home.com
+                            </span>
+                        </div>
 
-      {/* Row 2 */}
-      <div className="flex flex-col sm:flex-row gap-4 w-full">
-        <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
-          WhatsApp: +91 84510 00555
-        </span>
+                        {/* Row 2 */}
+                        <div className="flex flex-col sm:flex-row gap-4 w-full">
+                            <span className="w-full sm:w-auto text-center px-6 py-3 rounded-xl border border-accent">
+                                WhatsApp: +91 84510 00555
+                            </span>
 
-        <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
-          Book appointment online
-        </span>
-      </div>
+                            <span className="w-full sm:w-auto text-center bg-accent px-6 py-3 rounded-xl border border-accent">
+                                Book appointment online
+                            </span>
+                        </div>
 
-      {/* Row 3 */}
-      <div className="flex">
-        <span className="w-full text-center px-6 py-3 rounded-xl border border-accent">
-SMS: Send "BSH &lt;your pincode&gt;" to 9133711006
-        </span>
-      </div>
+                        {/* Row 3 */}
+                        <div className="flex">
+                            <span className="w-full text-center px-6 py-3 rounded-xl border border-accent">
+                                SMS: Send "BSH &lt;your pincode&gt;" to 9133711006
+                            </span>
+                        </div>
 
-    </div>
-  </div>
+                    </div>
+                </div>
 
-  {/* Banner Below */}
-  <div 
-    className="w-full h-[350px] rounded-2xl relative bg-cover bg-center"
-    style={{ backgroundImage: `url(${s2banner1})` }}
-  >
-    <img 
-      src={logo} 
-      alt="Logo"
-      className="w-[170px] h-auto absolute left-6 top-6"
-    />
-  </div>
+                {/* Banner Below */}
+                <div
+                    className="w-full h-[350px] rounded-2xl relative bg-cover bg-center"
+                    style={{ backgroundImage: `url(${s2banner1})` }}
+                >
+                    <img
+                        src={logo}
+                        alt="Logo"
+                        className="w-[170px] h-auto absolute left-6 top-6"
+                    />
+                </div>
 
-</section>
+            </section>
 
             {/* Section 3 of Home Page */}
             <section className="flex items-center justify-center w-full h-auto ">
