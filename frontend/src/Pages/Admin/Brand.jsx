@@ -92,7 +92,7 @@ function BrandCard({ item, onDelete }) {
 
       <div className="flex items-center gap-3">
         <img
-          src={`http://localhost:5000/${item.brandLogo}`}
+          src={`https://repairwalaunitech.onrender.com/${item.brandLogo}`}
           className="h-12 w-12 rounded-lg object-cover"
         />
 
@@ -117,14 +117,14 @@ function BrandRow({ item, index, onDelete }) {
 
       <td className="px-6 py-4">
         <img
-          src={`http://localhost:5000/${item.brandLogo}`}
+          src={`https://repairwalaunitech.onrender.com/${item.brandLogo}`}
           className="h-12 w-12 rounded-lg object-cover"
         />
       </td>
 
       <td className="px-6 py-4">
         <img
-          src={`http://localhost:5000/${item.brandImage}`}
+          src={`https://repairwalaunitech.onrender.com/${item.brandImage}`}
           className="h-12 w-12 rounded-lg object-cover"
         />
       </td>

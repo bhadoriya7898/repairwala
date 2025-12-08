@@ -13,16 +13,10 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
     fetchCategories();
   }, []);
 
-  // ⭐ DEFAULT SELECT TELEVISION
+  // ⭐ DEFAULT SELECT FIRST CATEGORY
   useEffect(() => {
     if (categories.length > 0 && !selectedCategory) {
-      const tv = categories.find((c) =>
-        c.name.toLowerCase().includes("tele")
-      );
-
-      if (tv) {
-        setSelectedCategory(tv._id);
-      }
+      setSelectedCategory(categories[0]._id);
     }
   }, [categories]);
 
@@ -30,14 +24,9 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
     <aside
       className="
         bg-[#C6DBDB] rounded-2xl p-5 flex flex-col gap-8
-
         lg:w-[320px] lg:h-[679px]
-
-        max-sm:w-full
-        max-sm:h-auto
-        max-sm:rounded-[20px]
-        max-sm:p-4
-        max-sm:gap-4
+        max-sm:w-full max-sm:h-auto max-sm:rounded-[20px]
+        max-sm:p-4 max-sm:gap-4
       "
     >
       <div className="flex items-center gap-2 max-sm:gap-1">
@@ -58,9 +47,7 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
       <div
         className="
           flex flex-col gap-3
-          max-sm:flex-row
-          max-sm:flex-wrap
-          max-sm:gap-2
+          max-sm:flex-row max-sm:flex-wrap max-sm:gap-2
         "
       >
         {categories.map((cat) => (
@@ -69,13 +56,8 @@ const ServicesSideCard = ({ selectedCategory, setSelectedCategory }) => {
             onClick={() => setSelectedCategory(cat._id)}
             className={`
               lg:px-10 lg:py-2 lg:text-base rounded-lg font-medium transition-all
-
-              max-sm:h-[26px]
-              max-sm:px-[10px]
-              max-sm:py-[4px]
-              max-sm:text-[12px]
-              max-sm:rounded-[6px]
-
+              max-sm:h-[26px] max-sm:px-[10px] max-sm:py-[4px]
+              max-sm:text-[12px] max-sm:rounded-[6px]
               ${
                 selectedCategory === cat._id
                   ? "bg-white shadow text-[#586082]"

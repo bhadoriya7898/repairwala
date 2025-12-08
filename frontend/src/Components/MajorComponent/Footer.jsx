@@ -74,7 +74,7 @@ const Footer = () => {
                     </div>
 
                     {/* Right Side Div Of Footer Main */}
-                                                <Link to={'/login'}><Button className="font-bold">For Employee</Button></Link>
+                     <Link to={'/login'}><Button className="font-bold">For Employee</Button></Link>
                     
                     <div>
                         <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Back to top <ArrowUp/></Button>
