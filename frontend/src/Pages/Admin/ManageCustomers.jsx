@@ -56,16 +56,17 @@ export function ManageCustomers() {
 
   return (
     <div className="space-y-6">
+
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Manage Customers</h1>
         <p className="text-gray-600 mt-2">View customer information and complaint history</p>
       </div>
 
-      {/* Customers Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      {/* ------------------------ DESKTOP TABLE ------------------------ */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden hidden md:block">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[900px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">ID</th>
@@ -108,10 +109,34 @@ export function ManageCustomers() {
         </div>
       </div>
 
-      {/* View Customer Modal */}
+      {/* ------------------------ MOBILE CARD VIEW ------------------------ */}
+      <div className="md:hidden space-y-4">
+        {customers.map((customer) => (
+          <div key={customer.id} className="bg-white rounded-xl shadow p-4 border flex justify-between items-center">
+            <div>
+              <p className="font-bold">{customer.name}</p>
+              <p className="text-gray-600 text-sm">{customer.phone}</p>
+            </div>
+
+            <button
+              onClick={() => {
+                setSelectedCustomer(customer);
+                setShowViewModal(true);
+              }}
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+            >
+              <Eye size={20} />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* ------------------------ VIEW CUSTOMER MODAL ------------------------ */}
       {showViewModal && selectedCustomer && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 max-h-[90vh] overflow-y-auto">
+
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Customer Details</h2>
               <button onClick={() => setShowViewModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -119,9 +144,10 @@ export function ManageCustomers() {
               </button>
             </div>
 
-            {/* Customer Info */}
+            {/* Customer Banner */}
             <div className="bg-gradient-to-r from-[#00A884] to-[#00c49a] rounded-xl p-6 text-white mb-6">
               <h3 className="text-2xl font-bold mb-4">{selectedCustomer.name}</h3>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
                   <Phone size={18} />
@@ -143,17 +169,19 @@ export function ManageCustomers() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <div className="bg-blue-50 rounded-xl p-4 text-center border border-blue-100">
                 <p className="text-3xl font-bold text-blue-600">{selectedCustomer.totalComplaints}</p>
                 <p className="text-sm text-gray-600 mt-1">Total Complaints</p>
               </div>
+
               <div className="bg-green-50 rounded-xl p-4 text-center border border-green-100">
                 <p className="text-3xl font-bold text-green-600">
                   {selectedCustomer.complaints.filter(c => c.status === 'Completed').length}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">Completed</p>
               </div>
+
               <div className="bg-yellow-50 rounded-xl p-4 text-center border border-yellow-100">
                 <p className="text-3xl font-bold text-yellow-600">
                   {selectedCustomer.complaints.filter(c => c.status !== 'Completed').length}
@@ -165,6 +193,7 @@ export function ManageCustomers() {
             {/* Complaint History */}
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Complaint History</h3>
+
               <div className="space-y-3">
                 {selectedCustomer.complaints.map((complaint) => (
                   <div key={complaint.id} className="border border-gray-200 rounded-xl p-4 hover:border-[#00A884] transition-colors">
@@ -183,12 +212,15 @@ export function ManageCustomers() {
                           <strong>Issue:</strong> {complaint.issue}
                         </p>
                       </div>
+
                       <span className="text-sm text-gray-500">{complaint.date}</span>
                     </div>
                   </div>
                 ))}
               </div>
+
             </div>
+
           </div>
         </div>
       )}

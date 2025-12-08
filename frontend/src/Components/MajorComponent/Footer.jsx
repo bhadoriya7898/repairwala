@@ -44,7 +44,7 @@ const Footer = () => {
                     <div className="flex flex-col md:flex-row gap-5 md:gap-20">
 
                         <div className="flex flex-col gap-5">
-                            <span className="text-para font-para font-semibold text-primary-text">// Navigation</span>
+                            <span className="text-para font-para font-semibold text-primary-text">Navigation</span>
                             <span className="flex flex-col gap-4 text-[14px] font-para font-medium text-secondary">
                                 
                                 <NavLink to={"/"} >Home</NavLink>
@@ -54,7 +54,7 @@ const Footer = () => {
                             </span>
                         </div>
                         <div className="flex flex-col gap-5 ">
-                            <span className="text-para font-para font-semibold text-primary-text">// Services</span>
+                            <span className="text-para font-para font-semibold text-primary-text">Services</span>
                             <span  className="flex flex-col gap-4 text-[14px] font-para font-medium text-secondary ">
                                 <h1>Refrigerators </h1>
                                 <h1>Air Conditioners </h1>
@@ -65,7 +65,7 @@ const Footer = () => {
                             </span>
                         </div>
                         <div className="flex flex-col gap-5 ">
-                            <span className="text-para font-para font-semibold text-primary-text">// Contact us</span>
+                            <span className="text-para font-para font-semibold text-primary-text">Contact us</span>
                             <span className="flex flex-col gap-4 text-[14px] font-para font-medium text-secondary">
                                 <h1>+1(135)658-9856</h1>
                                 <h1>hello@example.com</h1>
@@ -74,6 +74,8 @@ const Footer = () => {
                     </div>
 
                     {/* Right Side Div Of Footer Main */}
+                                                <Link to={'/login'}><Button className="font-bold">For Employee</Button></Link>
+                    
                     <div>
                         <Button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Back to top <ArrowUp/></Button>
                     </div>

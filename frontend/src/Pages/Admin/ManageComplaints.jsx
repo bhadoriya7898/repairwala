@@ -18,20 +18,22 @@ export function ManageComplaints() {
   const employees = ['Ramesh Kumar', 'Suresh Reddy', 'Vikram Singh', 'Ananya Iyer'];
 
   const updateStatus = (id, newStatus) => {
-    setComplaints(complaints.map(c => 
+    setComplaints(complaints.map(c =>
       c.id === id ? { ...c, status: newStatus } : c
     ));
   };
 
   const assignEmployee = (id, employee) => {
-    setComplaints(complaints.map(c => 
-      c.id === id ? { ...c, assignedTo: employee, status: employee === 'Unassigned' ? 'Pending' : 'In Progress' } : c
+    setComplaints(complaints.map(c =>
+      c.id === id
+        ? { ...c, assignedTo: employee, status: employee === 'Unassigned' ? 'Pending' : 'In Progress' }
+        : c
     ));
   };
 
   const filteredComplaints = complaints.filter(c => {
-    const matchesSearch = c.customer.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         c.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const s = searchTerm.toLowerCase();
+    const matchesSearch = c.customer.toLowerCase().includes(s) || c.id.toLowerCase().includes(s);
     const matchesStatus = filterStatus === 'All' || c.status === filterStatus;
     const matchesDevice = filterDevice === 'All' || c.device.includes(filterDevice);
     return matchesSearch && matchesStatus && matchesDevice;
@@ -58,21 +60,22 @@ export function ManageComplaints() {
       <div className="bg-white rounded-xl shadow-lg p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search complaints..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
+              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884]"
             />
           </div>
+
           <div className="relative">
-            <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent appearance-none"
+              className="w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#00A884]"
             >
               <option value="All">All Status</option>
               <option value="Pending">Pending</option>
@@ -80,12 +83,13 @@ export function ManageComplaints() {
               <option value="Completed">Completed</option>
             </select>
           </div>
+
           <div className="relative">
-            <Filter className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <select
               value={filterDevice}
               onChange={(e) => setFilterDevice(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#00A884] focus:border-transparent appearance-none"
+              className="w-full pl-12 pr-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#00A884]"
             >
               <option value="All">All Devices</option>
               <option value="iPhone">iPhone</option>
@@ -97,58 +101,61 @@ export function ManageComplaints() {
         </div>
       </div>
 
-      {/* Complaints Table */}
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      {/* ------------------------ DESKTOP TABLE ------------------------ */}
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden hidden md:block">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[900px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Customer</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Device</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Issue</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Assigned To</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">ID</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Customer</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Device</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Issue</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Assigned To</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredComplaints.map((complaint) => (
-                <tr key={complaint.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">{complaint.id}</td>
-                  <td className="px-6 py-4 text-sm text-gray-900">{complaint.customer}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{complaint.device}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600">{complaint.issue}</td>
+              {filteredComplaints.map((c) => (
+                <tr key={c.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">{c.id}</td>
+                  <td className="px-6 py-4">{c.customer}</td>
+                  <td className="px-6 py-4">{c.device}</td>
+                  <td className="px-6 py-4">{c.issue}</td>
+
                   <td className="px-6 py-4">
                     <select
-                      value={complaint.status}
-                      onChange={(e) => updateStatus(complaint.id, e.target.value)}
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(complaint.status)} border-0 cursor-pointer`}
+                      value={c.status}
+                      onChange={(e) => updateStatus(c.id, e.target.value)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(c.status)}`}
                     >
                       <option value="Pending">Pending</option>
                       <option value="In Progress">In Progress</option>
                       <option value="Completed">Completed</option>
                     </select>
                   </td>
+
                   <td className="px-6 py-4">
                     <select
-                      value={complaint.assignedTo}
-                      onChange={(e) => assignEmployee(complaint.id, e.target.value)}
-                      className="text-sm px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00A884] focus:border-transparent"
+                      value={c.assignedTo}
+                      onChange={(e) => assignEmployee(c.id, e.target.value)}
+                      className="text-sm px-3 py-1 border rounded-lg"
                     >
                       <option value="Unassigned">Unassigned</option>
                       {employees.map(emp => (
-                        <option key={emp} value={emp}>{emp}</option>
+                        <option key={emp}>{emp}</option>
                       ))}
                     </select>
                   </td>
+
                   <td className="px-6 py-4">
                     <button
                       onClick={() => {
-                        setSelectedComplaint(complaint);
+                        setSelectedComplaint(c);
                         setShowViewModal(true);
                       }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                     >
                       <Eye size={18} />
                     </button>
@@ -160,52 +167,91 @@ export function ManageComplaints() {
         </div>
       </div>
 
-      {/* View Complaint Modal */}
+      {/* ------------------------ MOBILE CARD VIEW ------------------------ */}
+      <div className="md:hidden space-y-4">
+        {filteredComplaints.map((c) => (
+          <div key={c.id} className="bg-white rounded-xl shadow p-4 border">
+            <div className="flex justify-between">
+              <h3 className="font-semibold">{c.customer}</h3>
+              <button
+                onClick={() => {
+                  setSelectedComplaint(c);
+                  setShowViewModal(true);
+                }}
+                className="text-blue-600 p-2 rounded-lg"
+              >
+                <Eye size={20} />
+              </button>
+            </div>
+
+            <p className="text-sm text-gray-600"><strong>ID:</strong> {c.id}</p>
+            <p className="text-sm text-gray-600"><strong>Device:</strong> {c.device}</p>
+            <p className="text-sm text-gray-600"><strong>Issue:</strong> {c.issue}</p>
+
+            <div className="mt-2 flex items-center gap-2">
+              <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(c.status)}`}>
+                {c.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ------------------------ VIEW MODAL ------------------------ */}
       {showViewModal && selectedComplaint && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Complaint Details</h2>
+              <h2 className="text-2xl font-bold">Complaint Details</h2>
               <button onClick={() => setShowViewModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X size={24} />
               </button>
             </div>
+
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">Complaint ID</p>
-                  <p className="text-lg font-semibold text-gray-900">{selectedComplaint.id}</p>
+                  <p className="text-lg font-semibold">{selectedComplaint.id}</p>
                 </div>
+
                 <div>
                   <p className="text-sm text-gray-500">Date</p>
-                  <p className="text-lg font-semibold text-gray-900">{selectedComplaint.date}</p>
+                  <p className="text-lg font-semibold">{selectedComplaint.date}</p>
                 </div>
               </div>
+
               <div>
-                <p className="text-sm text-gray-500">Customer Name</p>
-                <p className="text-lg font-semibold text-gray-900">{selectedComplaint.customer}</p>
+                <p className="text-sm text-gray-500">Customer</p>
+                <p className="text-lg font-semibold">{selectedComplaint.customer}</p>
               </div>
+
               <div>
                 <p className="text-sm text-gray-500">Device</p>
-                <p className="text-lg font-semibold text-gray-900">{selectedComplaint.device}</p>
+                <p className="text-lg font-semibold">{selectedComplaint.device}</p>
               </div>
+
               <div>
-                <p className="text-sm text-gray-500">Issue Description</p>
-                <p className="text-gray-900 bg-gray-50 p-4 rounded-xl">{selectedComplaint.issue}</p>
+                <p className="text-sm text-gray-500">Issue</p>
+                <p className="bg-gray-50 p-4 rounded-xl">{selectedComplaint.issue}</p>
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-500">Status</p>
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-2 ${getStatusColor(selectedComplaint.status)}`}>
+                  <span className={`inline-block mt-2 px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedComplaint.status)}`}>
                     {selectedComplaint.status}
                   </span>
                 </div>
+
                 <div>
                   <p className="text-sm text-gray-500">Assigned To</p>
-                  <p className="text-lg font-semibold text-gray-900 mt-2">{selectedComplaint.assignedTo}</p>
+                  <p className="text-lg font-semibold mt-2">{selectedComplaint.assignedTo}</p>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       )}

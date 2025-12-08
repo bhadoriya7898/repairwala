@@ -168,8 +168,8 @@ const Header = () => {
                         </div>
 
                         <div className="flex flex-row gap-4 items-center text-[12px] font-para font-bold ">
-                            <Link to={'/appointment'}>Book Appointment</Link>
-                            <Link to={'/login'}><Button className="font-bold">Login Employee DashBoard</Button></Link>
+                            {/* <Link to={'/appointment'}>Book Appointment</Link> */}
+                            <Link to={'/appointment'}><Button className="font-bold">Book Appointment</Button></Link>
                             {/* <Button 
       className="font-bold" 
       onClick={() => navigate('/appointment')}

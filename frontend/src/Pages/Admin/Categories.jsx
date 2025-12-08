@@ -93,33 +93,45 @@ export default function Categories() {
         </button>
       </div>
 
-      {/* Table */}
+      {/* TABLE (Perfect 4-column alignment) */}
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr>
-              <th className="px-6 py-4">#</th>
-              <th className="px-6 py-4">Name</th>
-              <th className="px-6 py-4">Image</th>
-              <th className="px-6 py-4">Actions</th>
+        <table className="w-full border border-gray-300 border-collapse">
+
+          {/* HEADER */}
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border border-gray-300 px-4 py-3 text-left w-20">S No</th>
+              <th className="border border-gray-300 px-4 py-3 text-left">Name</th>
+              <th className="border border-gray-300 px-4 py-3 text-center w-40">Image</th>
+              <th className="border border-gray-300 px-4 py-3 text-center w-32">Actions</th>
             </tr>
           </thead>
 
+          {/* BODY */}
           <tbody>
             {categories.map((item, index) => (
-              <tr key={item._id} className="border-b hover:bg-gray-50">
-                <td className="px-6 py-4">{index + 1}</td>
-                <td className="px-6 py-4">{item.name}</td>
+              <tr key={item._id} className="hover:bg-gray-50">
 
-                <td className="px-6 py-4">
-                 <img
-  src={`http://localhost:5000/${item.image.replace("src/", "")}`}
-  className="h-16 w-16 object-cover rounded-lg"
-/>
-
+                {/* # */}
+                <td className="border border-gray-300 px-4 py-3 text-left">
+                  {index + 1}
                 </td>
 
-                <td className="px-6 py-4">
+                {/* Name */}
+                <td className="border border-gray-300 px-4 py-3 text-left">
+                  {item.name}
+                </td>
+
+                {/* Image */}
+                <td className="border border-gray-300 px-4 py-3 text-center">
+                  <img
+                    src={`http://localhost:5000/${item.image}`}
+                    className="h-16 w-16 object-cover mx-auto rounded-lg"
+                  />
+                </td>
+
+                {/* Action */}
+                <td className="border border-gray-300 px-4 py-3 text-center">
                   <button
                     onClick={() => handleDelete(item._id)}
                     className="text-red-600 hover:bg-red-100 p-2 rounded-lg"
@@ -127,9 +139,11 @@ export default function Categories() {
                     <Trash2 size={18} />
                   </button>
                 </td>
+
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
 
@@ -153,6 +167,7 @@ export default function Categories() {
 
               {/* Drag Drop Box */}
               <label className="font-medium">Category Image</label>
+
               <div
                 className="border-2 border-dashed rounded-xl p-5 text-center cursor-pointer bg-gray-50"
                 onDrop={handleDrop}
@@ -201,6 +216,7 @@ export default function Categories() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

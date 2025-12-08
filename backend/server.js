@@ -23,10 +23,7 @@ connectDB();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ⭐ SERVE ALL UPLOAD FOLDERS PUBLICLY
-app.use("/uploads/categories", express.static(path.join(__dirname, "src/uploads/categories")));
-app.use("/uploads/brandLogo", express.static(path.join(__dirname, "src/uploads/brandLogo")));
-app.use("/uploads/brandImage", express.static(path.join(__dirname, "src/uploads/brandImage")));
+app.use("/uploads", express.static(path.join(__dirname, "src/uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);

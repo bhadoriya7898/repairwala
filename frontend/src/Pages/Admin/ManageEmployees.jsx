@@ -4,13 +4,11 @@ import { Plus, Edit, Trash2, X, Search, Check, XCircle } from "lucide-react";
 export function ManageEmployees() {
   /* ---------------- STATE ---------------- */
 
-  // Pending Approval Employees (Static for now, backend later)
   const [pendingEmployees, setPendingEmployees] = useState([
     { id: "P-001", firstName: "Amit", lastName: "Sharma", email: "amit@gmail.com" },
     { id: "P-002", firstName: "Rohit", lastName: "Verma", email: "rohit@gmail.com" },
   ]);
 
-  // Approved Employees
   const [employees, setEmployees] = useState([
     {
       id: "EMP-001",
@@ -49,7 +47,6 @@ export function ManageEmployees() {
 
   /* ---------------- HANDLERS ---------------- */
 
-  // Approve Employee
   const approveEmployee = (id) => {
     const emp = pendingEmployees.find((e) => e.id === id);
 
@@ -67,24 +64,20 @@ export function ManageEmployees() {
     setPendingEmployees(pendingEmployees.filter((e) => e.id !== id));
   };
 
-  // Reject Employee
   const rejectEmployee = (id) => {
     setPendingEmployees(pendingEmployees.filter((e) => e.id !== id));
   };
 
-  // Add New Employee
   const handleAddEmployee = () => {
     const newEmp = {
       id: `EMP-${String(employees.length + 1).padStart(3, "0")}`,
       ...formData,
       status: "Active",
     };
-
     setEmployees([...employees, newEmp]);
     setShowAddModal(false);
   };
 
-  // Edit Employee
   const handleEditEmployee = () => {
     setEmployees(
       employees.map((emp) =>
@@ -94,7 +87,6 @@ export function ManageEmployees() {
     setShowEditModal(false);
   };
 
-  // Delete Employee
   const handleDeleteEmployee = () => {
     setEmployees(employees.filter((emp) => emp.id !== selectedEmployee.id));
     setShowDeleteModal(false);
@@ -103,7 +95,7 @@ export function ManageEmployees() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 pb-20">
 
       {/* Page Header */}
       <div className="flex items-center justify-between">
@@ -120,110 +112,181 @@ export function ManageEmployees() {
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Employee Approval Requests</h2>
 
-        {pendingEmployees.length === 0 ? (
-          <p className="text-gray-500">No pending requests</p>
-        ) : (
-          <table className="w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left">Name</th>
-                <th className="px-6 py-3 text-left">Email</th>
-                <th className="px-6 py-3 text-left">Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {pendingEmployees.map((emp) => (
-                <tr key={emp.id} className="border-b">
-                  <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
-                  <td className="px-6 py-4">{emp.email}</td>
-                  <td className="px-6 py-4 flex gap-3">
-                    <button
-                      onClick={() => approveEmployee(emp.id)}
-                      className="flex items-center gap-1 text-green-600 hover:bg-green-100 px-3 py-1 rounded-lg"
-                    >
-                      <Check size={16} /> Approve
-                    </button>
-
-                    <button
-                      onClick={() => rejectEmployee(emp.id)}
-                      className="flex items-center gap-1 text-red-600 hover:bg-red-100 px-3 py-1 rounded-lg"
-                    >
-                      <XCircle size={16} /> Reject
-                    </button>
-                  </td>
+        {/* DESKTOP TABLE */}
+        <div className="hidden md:block overflow-x-auto">
+          {pendingEmployees.length === 0 ? (
+            <p className="text-gray-500">No pending requests</p>
+          ) : (
+            <table className="w-full min-w-[600px]">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left">Name</th>
+                  <th className="px-6 py-3 text-left">Email</th>
+                  <th className="px-6 py-3 text-left">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+
+              <tbody>
+                {pendingEmployees.map((emp) => (
+                  <tr key={emp.id} className="border-b">
+                    <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
+                    <td className="px-6 py-4">{emp.email}</td>
+                    <td className="px-6 py-4 flex gap-3">
+                      <button
+                        onClick={() => approveEmployee(emp.id)}
+                        className="flex items-center gap-1 text-green-600 hover:bg-green-100 px-3 py-1 rounded-lg"
+                      >
+                        <Check size={16} /> Approve
+                      </button>
+
+                      <button
+                        onClick={() => rejectEmployee(emp.id)}
+                        className="flex items-center gap-1 text-red-600 hover:bg-red-100 px-3 py-1 rounded-lg"
+                      >
+                        <XCircle size={16} /> Reject
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* MOBILE CARD VIEW */}
+        <div className="md:hidden space-y-4">
+          {pendingEmployees.map(emp => (
+            <div key={emp.id} className="border rounded-xl p-4 shadow-sm">
+              <p className="font-semibold">{emp.firstName} {emp.lastName}</p>
+              <p className="text-gray-600 text-sm">{emp.email}</p>
+
+              <div className="flex gap-3 mt-3">
+                <button
+                  onClick={() => approveEmployee(emp.id)}
+                  className="flex items-center gap-1 text-green-600 px-3 py-1 rounded-lg bg-green-50"
+                >
+                  <Check size={16} /> Approve
+                </button>
+
+                <button
+                  onClick={() => rejectEmployee(emp.id)}
+                  className="flex items-center gap-1 text-red-600 px-3 py-1 rounded-lg bg-red-50"
+                >
+                  <XCircle size={16} /> Reject
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ---------------- Approved Employees Section ---------------- */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Employees</h2>
 
-        <table className="w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left">ID</th>
-              <th className="px-6 py-3 text-left">Name</th>
-              <th className="px-6 py-3 text-left">Email</th>
-              <th className="px-6 py-3 text-left">Phone</th>
-              <th className="px-6 py-3 text-left">Role</th>
-              <th className="px-6 py-3 text-left">Status</th>
-              <th className="px-6 py-3 text-left">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {employees.map((emp) => (
-              <tr key={emp.id} className="border-b">
-                <td className="px-6 py-4">{emp.id}</td>
-                <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
-                <td className="px-6 py-4">{emp.email}</td>
-                <td className="px-6 py-4">{emp.phone}</td>
-                <td className="px-6 py-4">{emp.role}</td>
-                <td className="px-6 py-4">{emp.status}</td>
-
-                <td className="px-6 py-4">
-                  <div className="flex gap-3">
-
-                    {/* Edit Button */}
-                    <button
-                      onClick={() => {
-                        setSelectedEmployee(emp);
-                        setFormData(emp);
-                        setShowEditModal(true);
-                      }}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                    >
-                      <Edit size={18} />
-                    </button>
-
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => {
-                        setSelectedEmployee(emp);
-                        setShowDeleteModal(true);
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-
-                  </div>
-                </td>
+        {/* DESKTOP TABLE */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full min-w-[900px]">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left">ID</th>
+                <th className="px-6 py-3 text-left">Name</th>
+                <th className="px-6 py-3 text-left">Email</th>
+                <th className="px-6 py-3 text-left">Phone</th>
+                <th className="px-6 py-3 text-left">Role</th>
+                <th className="px-6 py-3 text-left">Status</th>
+                <th className="px-6 py-3 text-left">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {employees.map((emp) => (
+                <tr key={emp.id} className="border-b">
+                  <td className="px-6 py-4">{emp.id}</td>
+                  <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
+                  <td className="px-6 py-4">{emp.email}</td>
+                  <td className="px-6 py-4">{emp.phone}</td>
+                  <td className="px-6 py-4">{emp.role}</td>
+                  <td className="px-6 py-4">{emp.status}</td>
+
+                  <td className="px-6 py-4">
+                    <div className="flex gap-3">
+
+                      <button
+                        onClick={() => {
+                          setSelectedEmployee(emp);
+                          setFormData(emp);
+                          setShowEditModal(true);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                      >
+                        <Edit size={18} />
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          setSelectedEmployee(emp);
+                          setShowDeleteModal(true);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ---------------- MOBILE CARD VIEW ---------------- */}
+        <div className="md:hidden space-y-4">
+          {employees.map(emp => (
+            <div key={emp.id} className="border rounded-xl p-4 shadow-sm">
+
+              <div className="flex justify-between">
+                <p className="font-bold">{emp.firstName} {emp.lastName}</p>
+                <span className="text-sm text-gray-600">{emp.role}</span>
+              </div>
+
+              <p className="text-gray-600 text-sm">{emp.email}</p>
+              <p className="text-gray-600 text-sm">{emp.phone}</p>
+
+              <div className="flex justify-end gap-3 mt-3">
+                <button
+                  onClick={() => {
+                    setSelectedEmployee(emp);
+                    setFormData(emp);
+                    setShowEditModal(true);
+                  }}
+                  className="p-2 text-blue-600 rounded-lg bg-blue-50"
+                >
+                  <Edit size={18} />
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSelectedEmployee(emp);
+                    setShowDeleteModal(true);
+                  }}
+                  className="p-2 text-red-600 rounded-lg bg-red-50"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ---------------- Add Employee Modal ---------------- */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Add New Employee</h2>
               <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -259,14 +322,15 @@ export function ManageEmployees() {
                 Add Employee
               </button>
             </div>
+
           </div>
         </div>
       )}
 
       {/* ---------------- Edit Modal ---------------- */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
 
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Edit Employee</h2>
@@ -324,7 +388,7 @@ export function ManageEmployees() {
 
       {/* ---------------- Delete Confirmation ---------------- */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
 
             <div className="flex items-center justify-between mb-6">
