@@ -125,7 +125,7 @@ export default function Categories() {
                 {/* Image */}
                 <td className="border border-gray-300 px-4 py-3 text-center">
                   <img
-                    src={`https://repairwalaunitech.onrender.com/${item.image}`}
+                    src={`http://localhost:5000/${item.image}`}
                     className="h-16 w-16 object-cover mx-auto rounded-lg"
                   />
                 </td>

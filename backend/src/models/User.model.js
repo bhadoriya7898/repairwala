@@ -1,11 +1,33 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  firstName: {
+    type: String,
+    required: true
+  },
 
-  email: { type: String, unique: true },
-  password: String,
+  lastName: {
+    type: String,
+    required: true
+  },
+
+  email: { 
+    type: String, 
+    unique: true,
+    required: true
+  },
+
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /^[6-9]\d{9}$/, 
+  },
+
+  password: {
+    type: String,
+    required: true
+  },
 
   role: {
     type: String,
@@ -15,7 +37,7 @@ const userSchema = new mongoose.Schema({
 
   isApproved: {
     type: Boolean,
-    default: false        // employee approved by admin only
+    default: false // employee must be approved by admin
   },
 
   otp: String,

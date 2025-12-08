@@ -7,7 +7,7 @@ import {
   Profile, Login, Signup, ForgotPassword
 } from './Pages/index.js'
 import { Routes, Route, useLocation } from 'react-router-dom'
-
+import CompleteProfile from "./Pages/CompleteProfile";
 import { AdminDashboard } from './Pages/Admin/AdminDashboard';
 import { ManageEmployees } from './Pages/Admin/ManageEmployees';
 import { ManageComplaints } from './Pages/Admin/ManageComplaints';
@@ -53,6 +53,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/complete-profile" element={<CompleteProfile />} />
 
 
           {/* ADMIN ROUTES (Protected) */}

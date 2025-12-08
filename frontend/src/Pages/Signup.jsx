@@ -14,35 +14,27 @@ import { signupAPI } from "../api/api";
 const Signup = () => {
   const navigate = useNavigate();
 
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
-    // 1️⃣ Password match validation
     if (data.password !== data.confpassword) {
       alert("Password and Confirm Password do not match!");
       return;
     }
 
     try {
-      // 2️⃣ Send API request
       const res = await signupAPI({
         firstName: data.firstname,
         lastName: data.lastname,
         email: data.email,
+        phone: data.phone, 
         password: data.password,
         confirmPassword: data.confpassword,
-        role: "employee", // default role
+        role: "employee",
       });
 
-      // 3️⃣ Success message
       alert("Signup successful! Wait for admin approval.");
-      
-      // 4️⃣ Redirect to login
-      navigate("/login");
-
+      navigate("/complete-profile");
     } catch (err) {
       alert(err.response?.data?.msg || "Signup failed!");
     }
@@ -52,7 +44,7 @@ const Signup = () => {
     <AuthContainer>
       <div className="w-[420px] flex flex-col gap-[50px] px-3 py-5">
 
-        {/* Top Div Include Logo And Title */}
+        {/* Logo + Title */}
         <div className="flex flex-col gap-[30px] items-center justify-center">
           <span>
             <img src={logo} alt="Logo" />
@@ -68,11 +60,12 @@ const Signup = () => {
           </span>
         </div>
 
-        {/* Signup Form */}
+        {/* Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center flex-col gap-[30px] w-full"
         >
+          {/* First + Last Name */}
           <span className="flex flex-row w-full gap-[15px]">
             <InputBox
               className={"w-[50%]"}
@@ -97,6 +90,7 @@ const Signup = () => {
             />
           </span>
 
+          {/* Email */}
           <InputBox
             className={"w-full"}
             id={"email"}
@@ -108,6 +102,26 @@ const Signup = () => {
             required
           />
 
+          {/* ⭐ NEW MOBILE NUMBER FIELD */}
+      <InputBox
+  className="w-full"
+  id="phone"
+  label="Mobile Number"
+  type="tel"
+  placeholder="Enter Mobile Number"
+  register={register}
+  validation={{
+    required: true,
+    pattern: {
+      value: /^[6-9]\d{9}$/,
+      message: "Enter a valid 10-digit Indian mobile number",
+    },
+  }}
+  bg="bg-white"
+/>
+
+
+          {/* Password */}
           <InputBox
             className={"w-full"}
             id={"password"}
@@ -119,6 +133,7 @@ const Signup = () => {
             required
           />
 
+          {/* Confirm Password */}
           <InputBox
             className={"w-full"}
             id={"confpassword"}
@@ -147,11 +162,11 @@ const Signup = () => {
 
           <DashedLine>OR</DashedLine>
 
-          <span className="flex flex-row gap-4">
+          {/* <span className="flex flex-row gap-4">
             <FcGoogle className="h-[20px] w-[20px]" />
             <FaGithub className="h-[20px] w-[20px]" />
             <FaXTwitter className="h-[20px] w-[20px]" />
-          </span>
+          </span> */}
         </form>
       </div>
     </AuthContainer>

@@ -6,20 +6,29 @@ import nodemailer from "nodemailer";
 /* ---------------- SIGNUP ---------------- */
 export const signup = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, confirmPassword, role } = req.body;
+    const { firstName, lastName, email, phone, password, confirmPassword, role } = req.body;
 
+    // Validate password match
     if (password !== confirmPassword)
       return res.status(400).json({ msg: "Passwords do not match" });
 
+    // Email exists?
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ msg: "Email already exists" });
 
+    // Phone exists? (optional but recommended)
+    const phoneExists = await User.findOne({ phone });
+    if (phoneExists) return res.status(400).json({ msg: "Mobile number already registered" });
+
+    // Hash password
     const hashed = await bcrypt.hash(password, 10);
 
+    // Save user
     const user = await User.create({
       firstName,
       lastName,
       email,
+      phone,           
       password: hashed,
       role,
       isApproved: role === "admin" ? true : false
@@ -31,6 +40,7 @@ export const signup = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 /* ---------------- LOGIN ---------------- */
 export const login = async (req, res) => {

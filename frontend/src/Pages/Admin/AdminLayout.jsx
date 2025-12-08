@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import { Link, Outlet, NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -71,11 +71,14 @@ export function AdminLayout() {
             </button>
 
             {/* Logo */}
-            <img
+               <Link to={"/"}>
+             <img
               src="/src/assets/Images/Logo.png"
               alt="RepairWala Logo"
               className="h-10 w-auto"
             />
+            </Link>
+          
           </div>
 
           <span className="text-sm text-gray-600 hidden sm:block">
