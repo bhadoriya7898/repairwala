@@ -31,7 +31,7 @@ const CategoriesCard = ({ data }) => {
         "
       >
         <img
-          src={`http://localhost:5000/${data?.brandImage}`}
+          src={`https://repairwalaunitech.onrender.com/${data?.brandImage}`}
           className="object-contain h-full"
         />
       </div>
@@ -64,7 +64,7 @@ const CategoriesCard = ({ data }) => {
         </button>
 
         <img
-          src={`http://localhost:5000/${data?.brandLogo}`}
+          src={`https://repairwalaunitech.onrender.com/${data?.brandLogo}`}
           className="object-contain max-[480px]:h-[22px]"
         />
       </div>

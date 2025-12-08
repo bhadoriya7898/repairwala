@@ -99,7 +99,7 @@ const Home = () => {
       {/* IMAGE */}
       <div className="w-full h-40 flex items-center justify-center bg-white">
         <img
-          src={`http://localhost:5000/${categorie.image}`}
+          src={`https://repairwalaunitech.onrender.com/${categorie.image}`}
           alt={categorie.name}
           className="h-full object-contain p-3"
         />
