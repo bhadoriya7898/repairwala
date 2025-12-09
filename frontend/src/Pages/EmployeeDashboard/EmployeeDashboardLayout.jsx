@@ -1,9 +1,9 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  History, 
-  User, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  History,
+  User,
   LogOut,
   Menu,
   X
@@ -15,7 +15,6 @@ export const EmployeeDashboardLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Add logout logic here
     navigate('/');
   };
 
@@ -38,9 +37,9 @@ export const EmployeeDashboardLayout = () => {
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <img 
-              src="/src/assets/Images/Logo.png" 
-              alt="RepairWala Logo" 
+            <img
+              src="/src/assets/Images/Logo.png"
+              alt="RepairWala Logo"
               className="h-10 w-auto"
             />
             {/* <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">
@@ -58,9 +57,8 @@ export const EmployeeDashboardLayout = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col`}
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            } fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col`}
         >
           <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
             {navItems.map((item) => (
@@ -68,10 +66,9 @@ export const EmployeeDashboardLayout = () => {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-para ${
-                    isActive
-                      ? 'bg-[#00A884] text-white shadow-md'
-                      : 'text-gray-700 hover:bg-gray-100'
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-para ${isActive
+                    ? 'bg-[#00A884] text-white shadow-md'
+                    : 'text-gray-700 hover:bg-gray-100'
                   }`
                 }
               >

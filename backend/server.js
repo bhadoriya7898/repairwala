@@ -6,20 +6,23 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import authRoutes from "./src/routes/authRoutes.js";
-import adminRoutes from "./src/routes/adminRoutes.js";
-import employeeRoutes from "./src/routes/employeeRoutes.js";
+// import old adminRoutes if you have separate admin actions elsewhere
+// import adminRoutes from "./src/routes/adminRoutes.js";
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import brandRoutes from "./src/routes/brandRoutes.js";
+import profileRoute from "./src/routes/profileRoute.js";
+import employeeRoutes from "./src/routes/admin/employee.routes.js";
 
 dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 connectDB();
 
-// Fix dirname
+// Fix dirname for static uploads
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -27,11 +30,16 @@ app.use("/uploads", express.static(path.join(__dirname, "src/uploads")));
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/employee", employeeRoutes);
+
+// Mount admin employee routes at /api/admin
+app.use("/api/admin", employeeRoutes);
+
+// Other routes
 app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
+app.use("/api/profile", profileRoute);
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });

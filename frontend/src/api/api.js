@@ -29,8 +29,16 @@ export const approveEmployeeAPI = (id) => api.post(`/api/admin/approve/${id}`);
 // Reject employee
 export const rejectEmployeeAPI = (id) => api.post(`/api/admin/reject/${id}`);
 
-// Get all employees
+// Get all employees (with profile)
 export const getEmployeesAPI = () => api.get("/api/admin/employees");
+
+// Update employee
+export const updateEmployeeAPI = (id, data) =>
+  api.put(`/api/admin/employee/${id}`, data);
+
+// Delete employee
+export const deleteEmployeeAPI = (id) =>
+  api.delete(`/api/admin/employee/${id}`);
 
 
 /* ---------------- EMPLOYEE API ---------------- */
@@ -56,26 +64,27 @@ export const deleteCategoryAPI = (id) =>
 
 /* ---------------- BRAND API ---------------- */
 
-// Get all brands
 export const getBrandsAPI = () => api.get("/api/brands");
 
-// Add brand
 export const addBrandAPI = (formData) =>
   api.post("/api/brands", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-// Delete brand
 export const deleteBrandAPI = (id) =>
   api.delete(`/api/brands/${id}`);
 
 
-
 /* ---------------- DYNAMIC SERVICE PAGE APIS ---------------- */
 
-// ⭐ LEFT SIDE — Get unique categories from brands
 export const getBrandCategoriesAPI = () => api.get("/api/brands/categories");
 
-// ⭐ RIGHT SIDE — Get brands by category ID
 export const getBrandsByCategoryAPI = (categoryId) =>
   api.get(`/api/brands/filter?category=${categoryId}`);
+
+
+/* ---------------- COMPLETE PROFILE API ---------------- */
+export const completeProfileAPI = (formData) =>
+  api.post("/api/profile/complete-profile", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });

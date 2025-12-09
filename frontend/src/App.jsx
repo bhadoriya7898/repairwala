@@ -14,8 +14,8 @@ import { ManageComplaints } from './Pages/Admin/ManageComplaints';
 import { ManageServices } from './Pages/Admin/ManageServices';
 import { ManageCustomers } from './Pages/Admin/ManageCustomers';
 
-import Categories from "./Pages/Admin/Categories";  
-import Brand from "./Pages/Admin/Brand"; 
+import Categories from "./Pages/Admin/Categories";
+import Brand from "./Pages/Admin/Brand";
 
 import { AdminLayout } from './Pages/Admin/AdminLayout';
 

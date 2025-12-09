@@ -6,15 +6,12 @@ import { useForm } from "react-hook-form";
 import Button from "../Components/MinorComponent/Button";
 import DashedLine from "../Components/MinorComponent/DashedLine.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
-import { FaGithub, FaXTwitter } from "react-icons/fa6";
-
 import { signupAPI } from "../api/api";
 
 const Signup = () => {
   const navigate = useNavigate();
-
   const { register, handleSubmit } = useForm();
+  const [loading, setLoading] = React.useState(false);
 
   const onSubmit = async (data) => {
     if (data.password !== data.confpassword) {
@@ -23,20 +20,24 @@ const Signup = () => {
     }
 
     try {
+      setLoading(true); // ⬅ START LOADING
+      
       const res = await signupAPI({
         firstName: data.firstname,
         lastName: data.lastname,
         email: data.email,
-        phone: data.phone, 
+        phone: data.phone,
         password: data.password,
         confirmPassword: data.confpassword,
         role: "employee",
       });
-
-      alert("Signup successful! Wait for admin approval.");
+      localStorage.setItem("userId", res.data.userId);
+      alert("Signup successful! Please Complete Your Profile.");
       navigate("/complete-profile");
     } catch (err) {
       alert(err.response?.data?.msg || "Signup failed!");
+    } finally {
+      setLoading(false); // ⬅ STOP LOADING
     }
   };
 
@@ -49,7 +50,8 @@ const Signup = () => {
           <span>
             <img src={logo} alt="Logo" />
           </span>
-          <span className="flex flex-col gap-[15px] items-center justify-center text-center">
+
+          <span className="flex flex-col gap-[15px] items-center text-center">
             <h1>Get started absolutely free</h1>
             <p>
               Already have an account?{" "}
@@ -60,7 +62,6 @@ const Signup = () => {
           </span>
         </div>
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center flex-col gap-[30px] w-full"
@@ -102,24 +103,23 @@ const Signup = () => {
             required
           />
 
-          {/* ⭐ NEW MOBILE NUMBER FIELD */}
-      <InputBox
-  className="w-full"
-  id="phone"
-  label="Mobile Number"
-  type="tel"
-  placeholder="Enter Mobile Number"
-  register={register}
-  validation={{
-    required: true,
-    pattern: {
-      value: /^[6-9]\d{9}$/,
-      message: "Enter a valid 10-digit Indian mobile number",
-    },
-  }}
-  bg="bg-white"
-/>
-
+          {/* Phone */}
+          <InputBox
+            className="w-full"
+            id="phone"
+            label="Mobile Number"
+            type="tel"
+            placeholder="Enter Mobile Number"
+            register={register}
+            validation={{
+              required: true,
+              pattern: {
+                value: /^[6-9]\d{9}$/,
+                message: "Enter a valid 10-digit Indian mobile number",
+              },
+            }}
+            bg="bg-white"
+          />
 
           {/* Password */}
           <InputBox
@@ -145,8 +145,13 @@ const Signup = () => {
             required
           />
 
-          <Button type="submit" className="w-full max-w-none justify-center">
-            Create account
+          {/* ⭐ Button with Loading */}
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full max-w-none justify-center opacity-90 disabled:opacity-50"
+          >
+            {loading ? "Creating..." : "Create account"}
           </Button>
 
           <p>
@@ -162,11 +167,6 @@ const Signup = () => {
 
           <DashedLine>OR</DashedLine>
 
-          {/* <span className="flex flex-row gap-4">
-            <FcGoogle className="h-[20px] w-[20px]" />
-            <FaGithub className="h-[20px] w-[20px]" />
-            <FaXTwitter className="h-[20px] w-[20px]" />
-          </span> */}
         </form>
       </div>
     </AuthContainer>

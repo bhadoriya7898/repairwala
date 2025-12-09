@@ -34,7 +34,12 @@ export const signup = async (req, res) => {
       isApproved: role === "admin" ? true : false
     });
 
-    res.json({ msg: "Signup successful", user });
+    res.json({
+    msg: "Signup successful",
+    userId: user._id,
+    role: user.role
+    });
+
 
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -62,7 +67,13 @@ export const login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    res.json({ msg: "Login successful", token, role: user.role });
+    res.json({
+    msg: "Login successful",
+    token,
+    role: user.role,
+    userId: user._id
+    });
+
 
   } catch (err) {
     res.status(500).json({ error: err.message });

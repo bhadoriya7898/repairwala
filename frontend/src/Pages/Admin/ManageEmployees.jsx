@@ -1,95 +1,130 @@
-import { useState } from "react";
-import { Plus, Edit, Trash2, X, Search, Check, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  getPendingEmployeesAPI,
+  approveEmployeeAPI,
+  rejectEmployeeAPI,
+  getEmployeesAPI,
+  updateEmployeeAPI,
+  deleteEmployeeAPI,
+} from "../../api/api";
+
+import { Plus, Edit, Trash2, X, Check, XCircle, Search } from "lucide-react";
 
 export function ManageEmployees() {
   /* ---------------- STATE ---------------- */
+  const [pendingEmployees, setPendingEmployees] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [pendingEmployees, setPendingEmployees] = useState([
-    { id: "P-001", firstName: "Amit", lastName: "Sharma", email: "amit@gmail.com" },
-    { id: "P-002", firstName: "Rohit", lastName: "Verma", email: "rohit@gmail.com" },
-  ]);
-
-  const [employees, setEmployees] = useState([
-    {
-      id: "EMP-001",
-      firstName: "Ramesh",
-      lastName: "Kumar",
-      email: "ramesh@gmail.com",
-      phone: "9876543210",
-      role: "Technician",
-      status: "Active",
-    },
-    {
-      id: "EMP-002",
-      firstName: "Suresh",
-      lastName: "Reddy",
-      email: "suresh@gmail.com",
-      phone: "8765432109",
-      role: "Senior Tech",
-      status: "Active",
-    },
-  ]);
-
-  const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [detailsEmployee, setDetailsEmployee] = useState(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    role: "",
-    password: "",
+    role: "employee",
+    status: "Active",
   });
+
+  /* ---------------- FETCH ALL DATA ---------------- */
+  const loadData = async () => {
+    try {
+      setLoading(true);
+
+      const [pendingRes, empRes] = await Promise.all([
+        getPendingEmployeesAPI(),
+        getEmployeesAPI(),
+      ]);
+
+      setPendingEmployees(pendingRes.data.pending || []);
+      setEmployees(empRes.data.employees || []);
+    } catch (err) {
+      console.error("LOAD ERROR:", err);
+      alert("Failed to load employees");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   /* ---------------- HANDLERS ---------------- */
 
-  const approveEmployee = (id) => {
-    const emp = pendingEmployees.find((e) => e.id === id);
-
-    const newEmp = {
-      id: `EMP-${String(employees.length + 1).padStart(3, "0")}`,
-      firstName: emp.firstName,
-      lastName: emp.lastName,
-      email: emp.email,
-      phone: "0000000000",
-      role: "Technician",
-      status: "Active",
-    };
-
-    setEmployees([...employees, newEmp]);
-    setPendingEmployees(pendingEmployees.filter((e) => e.id !== id));
+  const approveEmployee = async (id) => {
+    try {
+      await approveEmployeeAPI(id);
+      alert("Employee Approved!");
+      loadData();
+    } catch (err) {
+      console.error("Approve Error:", err);
+      alert("Approval Failed!");
+    }
   };
 
-  const rejectEmployee = (id) => {
-    setPendingEmployees(pendingEmployees.filter((e) => e.id !== id));
+  const rejectEmployee = async (id) => {
+    try {
+      await rejectEmployeeAPI(id);
+      alert("Employee Rejected!");
+      loadData();
+    } catch (err) {
+      console.error("Reject Error:", err);
+      alert("Rejection Failed!");
+    }
   };
 
-  const handleAddEmployee = () => {
-    const newEmp = {
-      id: `EMP-${String(employees.length + 1).padStart(3, "0")}`,
-      ...formData,
-      status: "Active",
-    };
-    setEmployees([...employees, newEmp]);
-    setShowAddModal(false);
+  const openDetailsModal = (emp) => {
+    setDetailsEmployee(emp);
+    setShowDetailsModal(true);
   };
 
-  const handleEditEmployee = () => {
-    setEmployees(
-      employees.map((emp) =>
-        emp.id === selectedEmployee.id ? { ...selectedEmployee, ...formData } : emp
-      )
-    );
-    setShowEditModal(false);
+  const openEditModal = (emp) => {
+    setSelectedEmployee(emp);
+    setFormData({
+      firstName: emp.firstName || "",
+      lastName: emp.lastName || "",
+      email: emp.email || "",
+      phone: emp.phone || "",
+      role: emp.role || "employee",
+      status: emp.status || (emp.isApproved ? "Active" : "Pending"),
+    });
+    setShowEditModal(true);
   };
 
-  const handleDeleteEmployee = () => {
-    setEmployees(employees.filter((emp) => emp.id !== selectedEmployee.id));
-    setShowDeleteModal(false);
+  const handleEditEmployee = async () => {
+    try {
+      await updateEmployeeAPI(selectedEmployee._id, formData);
+      alert("Employee Updated!");
+      setShowEditModal(false);
+      loadData();
+    } catch (err) {
+      console.error("Update Error:", err);
+      alert("Update failed!");
+    }
+  };
+
+  const openDeleteModal = (emp) => {
+    setSelectedEmployee(emp);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteEmployee = async () => {
+    try {
+      await deleteEmployeeAPI(selectedEmployee._id);
+      alert("Employee Deleted!");
+      setShowDeleteModal(false);
+      loadData();
+    } catch (err) {
+      console.error("Delete Error:", err);
+      alert("Delete failed!");
+    }
   };
 
   /* ---------------- UI ---------------- */
@@ -100,23 +135,16 @@ export function ManageEmployees() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900">Manage Employees</h1>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="flex items-center gap-2 bg-[#00A884] hover:bg-[#008f6f] text-white px-6 py-3 rounded-xl shadow-lg"
-        >
-          <Plus size={20} /> Add Employee
-        </button>
       </div>
 
       {/* ---------------- Pending Approval Section ---------------- */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Employee Approval Requests</h2>
 
-        {/* DESKTOP TABLE */}
-        <div className="hidden md:block overflow-x-auto">
-          {pendingEmployees.length === 0 ? (
-            <p className="text-gray-500">No pending requests</p>
-          ) : (
+        {pendingEmployees.length === 0 ? (
+          <p className="text-gray-500">No pending requests</p>
+        ) : (
+          <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead className="bg-gray-50">
                 <tr>
@@ -128,19 +156,27 @@ export function ManageEmployees() {
 
               <tbody>
                 {pendingEmployees.map((emp) => (
-                  <tr key={emp.id} className="border-b">
+                  <tr key={emp._id} className="border-b">
                     <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
                     <td className="px-6 py-4">{emp.email}</td>
+
                     <td className="px-6 py-4 flex gap-3">
                       <button
-                        onClick={() => approveEmployee(emp.id)}
+                        onClick={() => openDetailsModal(emp)}
+                        className="flex items-center gap-1 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-lg"
+                      >
+                        <Search size={16} /> View Details
+                      </button>
+
+                      <button
+                        onClick={() => approveEmployee(emp._id)}
                         className="flex items-center gap-1 text-green-600 hover:bg-green-100 px-3 py-1 rounded-lg"
                       >
                         <Check size={16} /> Approve
                       </button>
 
                       <button
-                        onClick={() => rejectEmployee(emp.id)}
+                        onClick={() => rejectEmployee(emp._id)}
                         className="flex items-center gap-1 text-red-600 hover:bg-red-100 px-3 py-1 rounded-lg"
                       >
                         <XCircle size={16} /> Reject
@@ -150,178 +186,120 @@ export function ManageEmployees() {
                 ))}
               </tbody>
             </table>
-          )}
-        </div>
-
-        {/* MOBILE CARD VIEW */}
-        <div className="md:hidden space-y-4">
-          {pendingEmployees.map(emp => (
-            <div key={emp.id} className="border rounded-xl p-4 shadow-sm">
-              <p className="font-semibold">{emp.firstName} {emp.lastName}</p>
-              <p className="text-gray-600 text-sm">{emp.email}</p>
-
-              <div className="flex gap-3 mt-3">
-                <button
-                  onClick={() => approveEmployee(emp.id)}
-                  className="flex items-center gap-1 text-green-600 px-3 py-1 rounded-lg bg-green-50"
-                >
-                  <Check size={16} /> Approve
-                </button>
-
-                <button
-                  onClick={() => rejectEmployee(emp.id)}
-                  className="flex items-center gap-1 text-red-600 px-3 py-1 rounded-lg bg-red-50"
-                >
-                  <XCircle size={16} /> Reject
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* ---------------- Approved Employees Section ---------------- */}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">Employees</h2>
 
-        {/* DESKTOP TABLE */}
-        <div className="hidden md:block overflow-x-auto">
+        <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left">ID</th>
                 <th className="px-6 py-3 text-left">Name</th>
                 <th className="px-6 py-3 text-left">Email</th>
                 <th className="px-6 py-3 text-left">Phone</th>
                 <th className="px-6 py-3 text-left">Role</th>
                 <th className="px-6 py-3 text-left">Status</th>
+                <th className="px-6 py-3 text-left">Category</th>
+                <th className="px-6 py-3 text-left">Experience</th>
                 <th className="px-6 py-3 text-left">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {employees.map((emp) => (
-                <tr key={emp.id} className="border-b">
-                  <td className="px-6 py-4">{emp.id}</td>
+                <tr key={emp._id} className="border-b">
                   <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
                   <td className="px-6 py-4">{emp.email}</td>
-                  <td className="px-6 py-4">{emp.phone}</td>
+                  <td className="px-6 py-4">{emp.phone || "—"}</td>
                   <td className="px-6 py-4">{emp.role}</td>
-                  <td className="px-6 py-4">{emp.status}</td>
+                  <td className="px-6 py-4">{emp.status ?? (emp.isApproved ? "Active" : "Pending")}</td>
+                  <td className="px-6 py-4">{emp.profile?.category || "—"}</td>
+                  <td className="px-6 py-4">{emp.profile?.experience || "—"}</td>
 
                   <td className="px-6 py-4">
                     <div className="flex gap-3">
-
                       <button
-                        onClick={() => {
-                          setSelectedEmployee(emp);
-                          setFormData(emp);
-                          setShowEditModal(true);
-                        }}
+                        onClick={() => openEditModal(emp)}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                       >
                         <Edit size={18} />
                       </button>
 
                       <button
-                        onClick={() => {
-                          setSelectedEmployee(emp);
-                          setShowDeleteModal(true);
-                        }}
+                        onClick={() => openDeleteModal(emp)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
                       >
                         <Trash2 size={18} />
                       </button>
-
                     </div>
                   </td>
                 </tr>
               ))}
             </tbody>
+
           </table>
-        </div>
-
-        {/* ---------------- MOBILE CARD VIEW ---------------- */}
-        <div className="md:hidden space-y-4">
-          {employees.map(emp => (
-            <div key={emp.id} className="border rounded-xl p-4 shadow-sm">
-
-              <div className="flex justify-between">
-                <p className="font-bold">{emp.firstName} {emp.lastName}</p>
-                <span className="text-sm text-gray-600">{emp.role}</span>
-              </div>
-
-              <p className="text-gray-600 text-sm">{emp.email}</p>
-              <p className="text-gray-600 text-sm">{emp.phone}</p>
-
-              <div className="flex justify-end gap-3 mt-3">
-                <button
-                  onClick={() => {
-                    setSelectedEmployee(emp);
-                    setFormData(emp);
-                    setShowEditModal(true);
-                  }}
-                  className="p-2 text-blue-600 rounded-lg bg-blue-50"
-                >
-                  <Edit size={18} />
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSelectedEmployee(emp);
-                    setShowDeleteModal(true);
-                  }}
-                  className="p-2 text-red-600 rounded-lg bg-red-50"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </div>
-
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* ---------------- Add Employee Modal ---------------- */}
-      {showAddModal && (
+      {/* ---------------- Details Modal ---------------- */}
+      {showDetailsModal && detailsEmployee && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
-
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Add New Employee</h2>
-              <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
-                <X size={24} />
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Employee Details</h2>
+              <button onClick={() => setShowDetailsModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                <X size={22} />
               </button>
             </div>
 
-            <div className="space-y-4">
-              <input type="text" placeholder="First Name" value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="text" placeholder="Last Name" value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="email" placeholder="Email" value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="password" placeholder="Password" value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <button
-                onClick={handleAddEmployee}
-                className="w-full bg-[#00A884] hover:bg-[#008f6f] text-white py-3 rounded-xl font-semibold"
-              >
-                Add Employee
-              </button>
+            {/* BASIC INFO */}
+            <div className="space-y-2">
+              <p><b>Name:</b> {detailsEmployee.firstName} {detailsEmployee.lastName}</p>
+              <p><b>Email:</b> {detailsEmployee.email}</p>
+              <p><b>Phone:</b> {detailsEmployee.phone}</p>
             </div>
+
+            <hr className="my-4" />
+
+            {/* PROFILE INFO */}
+            {detailsEmployee.profile ? (
+              <div className="space-y-2">
+                <p><b>Category:</b> {detailsEmployee.profile.category}</p>
+                <p><b>Experience:</b> {detailsEmployee.profile.experience} years</p>
+                <p><b>Qualification:</b> {detailsEmployee.profile.qualification}</p>
+                <p><b>National ID:</b> {detailsEmployee.profile.nationalId}</p>
+                <p><b>Company:</b> {detailsEmployee.profile.company}</p>
+                <p><b>Current Address:</b> {detailsEmployee.profile.currentAddress}</p>
+                <p><b>Permanent Address:</b> {detailsEmployee.profile.permanentAddress}</p>
+
+                <div className="mt-3">
+                  <p className="font-semibold">Photo:</p>
+                  <img
+                    src={`http://localhost:5000/${detailsEmployee.profile.photo}`}
+                    alt="Employee"
+                    className="w-32 h-32 rounded-lg border object-cover"
+                  />
+                </div>
+
+                <div className="mt-3">
+                  <p className="font-semibold">Qualification Document:</p>
+                  <a
+                    href={`http://localhost:5000/${detailsEmployee.profile.qualificationDoc}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    View Document
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-600">No profile submitted yet.</p>
+            )}
 
           </div>
         </div>
@@ -330,40 +308,26 @@ export function ManageEmployees() {
       {/* ---------------- Edit Modal ---------------- */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
 
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Edit Employee</h2>
+              <h2 className="text-xl font-bold text-gray-900">Edit Employee</h2>
               <button onClick={() => setShowEditModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
                 <X size={24} />
               </button>
             </div>
 
             <div className="space-y-4">
-              <input type="text" placeholder="First Name" value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="text" placeholder="Last Name" value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="email" placeholder="Email" value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="text" placeholder="Phone Number" value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
-
-              <input type="text" placeholder="Role" value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                className="w-full px-4 py-3 border rounded-xl"
-              />
+              {["firstName", "lastName", "email", "phone", "role"].map((field) => (
+                <input
+                  key={field}
+                  type="text"
+                  placeholder={field}
+                  value={formData[field]}
+                  onChange={(e) => setFormData({ ...formData, [field]: e.target.value })}
+                  className="w-full px-4 py-3 border rounded-xl"
+                />
+              ))}
 
               <select
                 value={formData.status}
@@ -386,7 +350,7 @@ export function ManageEmployees() {
         </div>
       )}
 
-      {/* ---------------- Delete Confirmation ---------------- */}
+      {/* ---------------- Delete Modal ---------------- */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
@@ -422,7 +386,6 @@ export function ManageEmployees() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

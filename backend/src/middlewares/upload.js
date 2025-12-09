@@ -29,4 +29,28 @@ const brandStorage = multer.diskStorage({
   filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
 });
 
+// PROFILE STORAGE
+ensureFolder("src/uploads/profileDocuments");
+ensureFolder("src/uploads/profilePhotos");
+
+const profileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (file.fieldname === "qualificationDoc") cb(null, "src/uploads/profileDocuments");
+    if (file.fieldname === "photo") cb(null, "src/uploads/profilePhotos");
+  },
+  filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+
+const profileUpload = multer({ storage: profileStorage });
+
+export const uploadProfile = (req, res, next) => {
+
+  profileUpload.any()(req, res, function (err) {
+    if (err) return res.status(400).json({ msg: "File upload error", err });
+    next();
+  });
+};
+
+
+
 export const uploadBrand = multer({ storage: brandStorage });
