@@ -2,18 +2,42 @@ import User from "../../models/User.model.js";
 import Profile from "../../models/Profile.js";
 import bcrypt from "bcryptjs";
 
+/* ---------------- Helper: attach profile to single user ---------------- */
+const attachProfile = async (user) => {
+  if (!user) return null;
+  // make sure user is plain object
+  const u = user.toObject ? user.toObject() : user;
+  const profile = await Profile.findOne({ userId: u._id }).lean();
+  return {
+    ...u,
+    profile: profile || null,
+  };
+};
+
 /* ---------------------------------------------------------
-   1) GET PENDING EMPLOYEES (waiting for admin approval)
+   1) GET PENDING EMPLOYEES (waiting for admin approval) - now includes profile
 ----------------------------------------------------------*/
 export const getPendingEmployees = async (req, res) => {
   try {
-    const pending = await User.find({
+    const pendingUsers = await User.find({
       role: "employee",
       isApproved: false,
-    }).select("-password -otp -otpExpiry");
+    }).select("-password -otp -otpExpiry").lean();
 
-    res.json({ pending });
+    // Attach profile for each pending user (if exists)
+    const pendingWithProfile = await Promise.all(
+      pendingUsers.map(async (u) => {
+        const profile = await Profile.findOne({ userId: u._id }).lean();
+        return {
+          ...u,
+          profile: profile || null,
+        };
+      })
+    );
+
+    res.json({ pending: pendingWithProfile });
   } catch (err) {
+    console.error("getPendingEmployees error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -27,12 +51,16 @@ export const approveEmployee = async (req, res) => {
       req.params.id,
       { isApproved: true },
       { new: true }
-    );
+    ).select("-password -otp -otpExpiry");
 
     if (!updated) return res.status(404).json({ msg: "Employee not found" });
 
-    res.json({ msg: "Employee approved successfully", updated });
+    // attach profile if exists
+    const profile = await Profile.findOne({ userId: updated._id }).lean();
+
+    res.json({ msg: "Employee approved successfully", updated: { ...updated.toObject(), profile: profile || null } });
   } catch (err) {
+    console.error("approveEmployee error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -42,12 +70,13 @@ export const approveEmployee = async (req, res) => {
 ----------------------------------------------------------*/
 export const rejectEmployee = async (req, res) => {
   try {
-    // remove user and any profile they may have
+    // remove profile first (if any) then user
     await Profile.findOneAndDelete({ userId: req.params.id });
     await User.findByIdAndDelete(req.params.id);
 
     res.json({ msg: "Employee request rejected and removed" });
   } catch (err) {
+    console.error("rejectEmployee error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -77,6 +106,7 @@ export const addEmployee = async (req, res) => {
 
     res.json({ msg: "Employee added successfully", employee });
   } catch (err) {
+    console.error("addEmployee error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -102,6 +132,7 @@ export const getEmployees = async (req, res) => {
 
     res.json({ employees });
   } catch (err) {
+    console.error("getEmployees error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -117,10 +148,15 @@ export const updateEmployee = async (req, res) => {
       req.params.id,
       { firstName, lastName, email, phone, role, status },
       { new: true }
-    ).select("-password");
+    ).select("-password -otp -otpExpiry");
 
-    res.json({ msg: "Employee updated successfully", updated });
+    if (!updated) return res.status(404).json({ msg: "Employee not found" });
+
+    const profile = await Profile.findOne({ userId: updated._id }).lean();
+
+    res.json({ msg: "Employee updated successfully", updated: { ...updated.toObject(), profile: profile || null } });
   } catch (err) {
+    console.error("updateEmployee error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -135,6 +171,7 @@ export const deleteEmployee = async (req, res) => {
 
     res.json({ msg: "Employee deleted successfully" });
   } catch (err) {
+    console.error("deleteEmployee error:", err);
     res.status(500).json({ error: err.message });
   }
 };

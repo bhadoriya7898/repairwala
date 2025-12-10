@@ -10,6 +10,16 @@ import {
 
 import { Plus, Edit, Trash2, X, Check, XCircle, Search } from "lucide-react";
 
+/* ---------------- FIX FILE PATHS FROM DATABASE ---------------- */
+const fixPath = (filePath) => {
+  if (!filePath) return "";
+
+  let clean = filePath.replace("src\\", "").replace("src/", "");
+  clean = clean.replace(/\\/g, "/");
+
+  return `http://localhost:5000/${clean}`;
+};
+
 export function ManageEmployees() {
   /* ---------------- STATE ---------------- */
   const [pendingEmployees, setPendingEmployees] = useState([]);
@@ -32,7 +42,7 @@ export function ManageEmployees() {
     status: "Active",
   });
 
-  /* ---------------- FETCH ALL DATA ---------------- */
+  /* ---------------- FETCH DATA ---------------- */
   const loadData = async () => {
     try {
       setLoading(true);
@@ -43,7 +53,9 @@ export function ManageEmployees() {
       ]);
 
       setPendingEmployees(pendingRes.data.pending || []);
-      setEmployees(empRes.data.employees || []);
+
+      // APPROVED EMPLOYEES ONLY
+      setEmployees((empRes.data.employees || []).filter((e) => e.isApproved));
     } catch (err) {
       console.error("LOAD ERROR:", err);
       alert("Failed to load employees");
@@ -93,7 +105,7 @@ export function ManageEmployees() {
       email: emp.email || "",
       phone: emp.phone || "",
       role: emp.role || "employee",
-      status: emp.status || (emp.isApproved ? "Active" : "Pending"),
+      status: emp.status || "Active",
     });
     setShowEditModal(true);
   };
@@ -132,7 +144,7 @@ export function ManageEmployees() {
   return (
     <div className="space-y-10 pb-20">
 
-      {/* Page Header */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-gray-900">Manage Employees</h1>
       </div>
@@ -161,6 +173,8 @@ export function ManageEmployees() {
                     <td className="px-6 py-4">{emp.email}</td>
 
                     <td className="px-6 py-4 flex gap-3">
+
+                      {/* View Full Details */}
                       <button
                         onClick={() => openDetailsModal(emp)}
                         className="flex items-center gap-1 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-lg"
@@ -168,6 +182,7 @@ export function ManageEmployees() {
                         <Search size={16} /> View Details
                       </button>
 
+                      {/* Approve */}
                       <button
                         onClick={() => approveEmployee(emp._id)}
                         className="flex items-center gap-1 text-green-600 hover:bg-green-100 px-3 py-1 rounded-lg"
@@ -175,16 +190,19 @@ export function ManageEmployees() {
                         <Check size={16} /> Approve
                       </button>
 
+                      {/* Reject */}
                       <button
                         onClick={() => rejectEmployee(emp._id)}
                         className="flex items-center gap-1 text-red-600 hover:bg-red-100 px-3 py-1 rounded-lg"
                       >
                         <XCircle size={16} /> Reject
                       </button>
+
                     </td>
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}
@@ -201,8 +219,6 @@ export function ManageEmployees() {
                 <th className="px-6 py-3 text-left">Name</th>
                 <th className="px-6 py-3 text-left">Email</th>
                 <th className="px-6 py-3 text-left">Phone</th>
-                <th className="px-6 py-3 text-left">Role</th>
-                <th className="px-6 py-3 text-left">Status</th>
                 <th className="px-6 py-3 text-left">Category</th>
                 <th className="px-6 py-3 text-left">Experience</th>
                 <th className="px-6 py-3 text-left">Actions</th>
@@ -215,27 +231,35 @@ export function ManageEmployees() {
                   <td className="px-6 py-4">{emp.firstName} {emp.lastName}</td>
                   <td className="px-6 py-4">{emp.email}</td>
                   <td className="px-6 py-4">{emp.phone || "—"}</td>
-                  <td className="px-6 py-4">{emp.role}</td>
-                  <td className="px-6 py-4">{emp.status ?? (emp.isApproved ? "Active" : "Pending")}</td>
                   <td className="px-6 py-4">{emp.profile?.category || "—"}</td>
                   <td className="px-6 py-4">{emp.profile?.experience || "—"}</td>
 
-                  <td className="px-6 py-4">
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => openEditModal(emp)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                      >
-                        <Edit size={18} />
-                      </button>
+                  <td className="px-6 py-4 flex gap-3">
 
-                      <button
-                        onClick={() => openDeleteModal(emp)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
+                    {/* View Details */}
+                    <button
+                      onClick={() => openDetailsModal(emp)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                    >
+                      <Search size={18} />
+                    </button>
+
+                    {/* Edit */}
+                    <button
+                      onClick={() => openEditModal(emp)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
+                    >
+                      <Edit size={18} />
+                    </button>
+
+                    {/* Delete */}
+                    <button
+                      onClick={() => openDeleteModal(emp)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+
                   </td>
                 </tr>
               ))}
@@ -249,6 +273,7 @@ export function ManageEmployees() {
       {showDetailsModal && detailsEmployee && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Employee Details</h2>
               <button onClick={() => setShowDetailsModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
@@ -268,6 +293,7 @@ export function ManageEmployees() {
             {/* PROFILE INFO */}
             {detailsEmployee.profile ? (
               <div className="space-y-2">
+
                 <p><b>Category:</b> {detailsEmployee.profile.category}</p>
                 <p><b>Experience:</b> {detailsEmployee.profile.experience} years</p>
                 <p><b>Qualification:</b> {detailsEmployee.profile.qualification}</p>
@@ -279,7 +305,7 @@ export function ManageEmployees() {
                 <div className="mt-3">
                   <p className="font-semibold">Photo:</p>
                   <img
-                    src={`http://localhost:5000/${detailsEmployee.profile.photo}`}
+                    src={fixPath(detailsEmployee.profile.photo)}
                     alt="Employee"
                     className="w-32 h-32 rounded-lg border object-cover"
                   />
@@ -288,7 +314,7 @@ export function ManageEmployees() {
                 <div className="mt-3">
                   <p className="font-semibold">Qualification Document:</p>
                   <a
-                    href={`http://localhost:5000/${detailsEmployee.profile.qualificationDoc}`}
+                    href={fixPath(detailsEmployee.profile.qualificationDoc)}
                     target="_blank"
                     rel="noreferrer"
                     className="text-blue-600 underline"
@@ -296,6 +322,7 @@ export function ManageEmployees() {
                     View Document
                   </a>
                 </div>
+
               </div>
             ) : (
               <p className="text-gray-600">No profile submitted yet.</p>
@@ -386,6 +413,7 @@ export function ManageEmployees() {
           </div>
         </div>
       )}
+
     </div>
   );
 }

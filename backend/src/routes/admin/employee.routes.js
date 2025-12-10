@@ -16,7 +16,7 @@ const router = express.Router();
 // Add employee manually
 router.post("/employee", addEmployee);
 
-// Get pending approval employees
+// Get pending approval employees (now returns profile as well)
 router.get("/pending-employees", getPendingEmployees);
 
 // Approve employee
