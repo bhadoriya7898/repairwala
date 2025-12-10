@@ -1,25 +1,22 @@
+// src/Pages/Login.jsx
 import React, { useState } from "react";
 import AuthContainer from "../Components/MajorComponent/AuthContainer";
 import { logo } from "../assets/Images/index.js";
 import InputBox from "../Components/MinorComponent/InputBox";
 import { useForm } from "react-hook-form";
-import Button from "../Components/MinorComponent/Button";
 import DashedLine from "../Components/MinorComponent/DashedLine.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
-
 import { loginAPI } from "../api/api";
 
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
-    if (loading) return; // 🛑 Prevent multi-clicks
-
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -28,82 +25,64 @@ const Login = () => {
         password: data.password,
       });
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
-
-      if (res.data.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/employee/dashboard");
+      // If backend says profile incomplete -> redirect to complete-profile
+      if (res.data.redirect === "/complete-profile") {
+        // Save userId so CompleteProfile can use it
+        if (res.data.userId) localStorage.setItem("userId", res.data.userId);
+        alert("Please complete your profile to continue.");
+        navigate("/complete-profile");
+        return;
       }
 
-      alert("Login Successful!");
+      // Normal (successful) login response contains token
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.role);
+        localStorage.setItem("userId", res.data.userId);
+
+        // redirect based on role
+        if (res.data.role === "admin") navigate("/admin/dashboard");
+        else navigate("/employee/dashboard");
+
+        alert("Login Successful!");
+      } else {
+        // Unexpected but handle gracefully
+        alert(res.data.msg || "Login completed");
+      }
     } catch (err) {
-      alert(err.response?.data?.msg || "Invalid credentials!");
+      // If 403 admin approval required or other error
+      const msg = err.response?.data?.msg || "Invalid credentials!";
+      alert(msg);
     } finally {
-      setLoading(false); // re-enable button
+      setLoading(false);
     }
   };
 
   return (
     <AuthContainer>
       <div className="w-[420px] flex flex-col gap-[50px] px-3 py-5">
-        {/* Top Div Include Logo And Title */}
         <div className="flex flex-col gap-[30px] items-center justify-center">
-          <span>
-            <img src={logo} alt="Logo" />
-          </span>
+          <span><img src={logo} alt="Logo" /></span>
           <span className="flex flex-col gap-[15px] items-center justify-center text-center">
             <h1>Sign in to your account</h1>
             <p>
               Don't have an account?{" "}
-              <Link to={"/signup"} className="text-[#00A76F]">
-                Get started
-              </Link>
+              <Link to={"/signup"} className="text-[#00A76F]">Get started</Link>
             </p>
           </span>
         </div>
 
-        {/* Form */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center justify-center flex-col gap-[30px] w-full"
-        >
-          <InputBox
-            className={"w-full"}
-            id={"email"}
-            label={"Email"}
-            type="email"
-            placeholder="Enter Email"
-            register={register}
-            bg="bg-white"
-            required
-          />
-
+        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-center flex-col gap-[30px] w-full">
+          <InputBox className={"w-full"} id={"email"} label={"Email"} type="email" placeholder="Enter Email" register={register} bg="bg-white" required />
           <span className="flex flex-col w-full gap-[15px]">
-            <Link to={"/forgotpassword"} className="text-right">
-              Forgot Password?
-            </Link>
-
-            <InputBox
-              className={"w-full"}
-              id={"password"}
-              label={"Password"}
-              type="password"
-              placeholder="Enter Password"
-              register={register}
-              bg="bg-white"
-              required
-            />
+            <Link to={"/forgotpassword"} className="text-right">Forgot Password?</Link>
+            <InputBox className={"w-full"} id={"password"} label={"Password"} type="password" placeholder="Enter Password" register={register} bg="bg-white" required />
           </span>
 
-          {/* Login Button (Disabled During Request) */}
           <button
             type="submit"
             disabled={loading}
-            className={`w-full max-w-none justify-center px-4 py-3 rounded-xl text-white 
-              ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}
-            `}
+            className={`w-full max-w-none justify-center px-4 py-3 rounded-xl text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-primary"}`}
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
