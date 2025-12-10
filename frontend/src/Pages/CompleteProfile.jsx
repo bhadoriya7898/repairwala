@@ -41,7 +41,7 @@ const CompleteProfile = () => {
 
       alert("Profile Completed Successfully! Wait for Admin Approval.");
 
-      // ❌ No Redirect — user cannot login until admin approves
+      window.location.reload();
 
     } catch (err) {
       console.log("PROFILE ERROR:", err.response?.data);
