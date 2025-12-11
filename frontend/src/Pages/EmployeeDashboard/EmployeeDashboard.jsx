@@ -1,158 +1,189 @@
-import { Briefcase, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+// src/Pages/Employee/EmployeeDashboard.jsx
+
+import { useEffect, useState } from "react";
+import { Briefcase, CheckCircle, Clock, TrendingUp } from "lucide-react";
+import toast from "react-hot-toast";
+
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
 export const EmployeeDashboard = () => {
-  const stats = [
-    {
-      title: 'Assigned Jobs',
-      value: '12',
-      icon: Briefcase,
-      color: 'bg-blue-500',
-      textColor: 'text-blue-600',
-      bgLight: 'bg-blue-50',
-    },
-    {
-      title: 'Completed Jobs',
-      value: '45',
-      icon: CheckCircle,
-      color: 'bg-green-500',
-      textColor: 'text-green-600',
-      bgLight: 'bg-green-50',
-    },
-    {
-      title: 'Pending Jobs',
-      value: '8',
-      icon: Clock,
-      color: 'bg-yellow-500',
-      textColor: 'text-yellow-600',
-      bgLight: 'bg-yellow-50',
-    },
-    {
-      title: 'This Month',
-      value: '23',
-      icon: TrendingUp,
-      color: 'bg-purple-500',
-      textColor: 'text-purple-600',
-      bgLight: 'bg-purple-50',
-    },
-  ];
+  const [stats, setStats] = useState(null);
+  const [recent, setRecent] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const recentActivity = [
-    {
-      id: 1,
-      customer: 'Rajesh Kumar',
-      device: 'Samsung Galaxy S21',
-      issue: 'Screen replacement',
-      status: 'Completed',
-      time: '2 hours ago',
-    },
-    {
-      id: 2,
-      customer: 'Priya Sharma',
-      device: 'iPhone 13 Pro',
-      issue: 'Battery replacement',
-      status: 'In Progress',
-      time: '4 hours ago',
-    },
-    {
-      id: 3,
-      customer: 'Amit Patel',
-      device: 'OnePlus 9',
-      issue: 'Water damage repair',
-      status: 'Pending',
-      time: '1 day ago',
-    },
-    {
-      id: 4,
-      customer: 'Sneha Reddy',
-      device: 'Xiaomi Mi 11',
-      issue: 'Charging port repair',
-      status: 'Completed',
-      time: '2 days ago',
-    },
-  ];
+  // FIX: Dashboard now uses userId (not employeeId)
+  const employeeId = localStorage.getItem("userId");
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Completed':
-        return 'bg-green-100 text-green-700';
-      case 'In Progress':
-        return 'bg-blue-100 text-blue-700';
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
+  if (!employeeId) {
+    return (
+      <p className="text-center text-red-600 font-semibold mt-10">
+        No userId found. Please login again.
+      </p>
+    );
+  }
+
+  /* ------------------------- FETCH DASHBOARD DATA ------------------------ */
+  const fetchDashboard = async () => {
+    try {
+      setLoading(true);
+
+      // fetch stats
+      const statsRes = await fetch(
+        `${API_BASE}/api/employee/dashboard/stats/${employeeId}`
+      );
+      const statsData = await statsRes.json();
+
+      // fetch recent activity
+      const recentRes = await fetch(
+        `${API_BASE}/api/employee/dashboard/recent/${employeeId}`
+      );
+      const recentData = await recentRes.json();
+
+      if (!statsData.success) {
+        toast.error("Failed to load stats");
+      } else {
+        setStats(statsData.data);
+      }
+
+      if (!recentData.success) {
+        toast.error("Failed to load recent activity");
+      } else {
+        setRecent(recentData.data);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error loading dashboard");
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  /* ------------------------- STATUS BADGE COLORS ------------------------ */
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Completed":
+        return "bg-green-100 text-green-700";
+      case "In Progress":
+        return "bg-blue-100 text-blue-700";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-700";
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  /* ------------------------- LOADING UI ------------------------ */
+  if (loading) {
+    return (
+      <div className="p-6 text-center text-gray-600 animate-pulse">
+        Loading dashboard...
+      </div>
+    );
+  }
+
+  /* ------------------------- PAGE UI ------------------------ */
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
+    <div className="space-y-8 p-2 sm:p-4">
+
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-        <p className="text-gray-600 font-para mt-2">
-          Welcome back! Here's your work summary
+        <p className="text-gray-600 mt-2">
+          Welcome back! Here’s your recent work summary.
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          {
+            title: "Assigned Jobs",
+            value: stats?.assigned || 0,
+            icon: Briefcase,
+            bg: "bg-blue-50",
+            text: "text-blue-600",
+          },
+          {
+            title: "Completed Jobs",
+            value: stats?.completed || 0,
+            icon: CheckCircle,
+            bg: "bg-green-50",
+            text: "text-green-600",
+          },
+          {
+            title: "Pending Jobs",
+            value: stats?.pending || 0,
+            icon: Clock,
+            bg: "bg-yellow-50",
+            text: "text-yellow-600",
+          },
+          {
+            title: "This Month",
+            value: stats?.thisMonth || 0,
+            icon: TrendingUp,
+            bg: "bg-purple-50",
+            text: "text-purple-600",
+          },
+        ].map((card, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
+            className="bg-white rounded-xl shadow p-6 flex justify-between items-center hover:shadow-md transition"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600 font-para">{stat.title}</p>
-                <h3 className="text-3xl font-bold text-gray-900 mt-2">
-                  {stat.value}
-                </h3>
-              </div>
-              <div className={`${stat.bgLight} p-3 rounded-xl`}>
-                <stat.icon className={stat.textColor} size={28} />
-              </div>
+            <div>
+              <p className="text-sm text-gray-500">{card.title}</p>
+              <h3 className="text-3xl font-bold mt-1">{card.value}</h3>
+            </div>
+            <div className={`${card.bg} p-3 rounded-xl`}>
+              <card.icon size={30} className={card.text} />
             </div>
           </div>
         ))}
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
-          <span className="text-sm text-gray-500 font-para">Last 7 days</span>
+      <div className="bg-white rounded-xl shadow p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold">Recent Activity</h2>
+          <span className="text-sm text-gray-500">Last 7 days</span>
         </div>
 
-        <div className="space-y-4">
-          {recentActivity.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 transition-colors duration-200 border border-gray-100"
-            >
-              <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">
-                  {activity.customer}
-                </h3>
-                <p className="text-sm text-gray-600 font-para mt-1">
-                  {activity.device} - {activity.issue}
-                </p>
+        {recent.length === 0 ? (
+          <p className="text-gray-500">No recent activity found.</p>
+        ) : (
+          <div className="space-y-4">
+            {recent.map((item) => (
+              <div
+                key={item._id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 border rounded-xl hover:bg-gray-50"
+              >
+                <div>
+                  <h3 className="font-semibold">{item.customer}</h3>
+                  <p className="text-sm text-gray-600">
+                    {item.brand} {item.model} — {item.message}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      item.status
+                    )}`}
+                  >
+                    {item.status}
+                  </span>
+                  <span className="text-sm text-gray-500">{item.timeAgo}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                    activity.status
-                  )}`}
-                >
-                  {activity.status}
-                </span>
-                <span className="text-sm text-gray-500 font-para min-w-[100px] text-right">
-                  {activity.time}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+export default EmployeeDashboard;

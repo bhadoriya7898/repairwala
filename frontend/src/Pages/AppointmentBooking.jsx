@@ -9,11 +9,12 @@ import Step1Appointment from "../Components/MajorComponent/MultiStepForm/Step1Ap
 import Step2Appointment from "../Components/MajorComponent/MultiStepForm/Step2Appointment.jsx";
 import Step3Appointment from "../Components/MajorComponent/MultiStepForm/Step3Appointment.jsx";
 import Step4Appointment from "../Components/MajorComponent/MultiStepForm/Step4Appointment.jsx";
-
+import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 
 const AppointmentBooking = () => {
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const {
         register,
@@ -23,17 +24,35 @@ const AppointmentBooking = () => {
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data, e) => {
+  const onSubmit = async (data) => {
+  try {
+    setIsSubmitting(true);
 
-        e.preventDefault();
+    const res = await fetch("http://localhost:5000/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-        setCurrentStep(6)
-        console.log("Form Data:", data);
-        // you can send data to backend here
-    };
+    const result = await res.json();
 
+    if (result.success) {
+      toast.success("Appointment submitted! Our technician will call you soon.");
 
-
+      // redirect after 2 seconds (so user sees toast)
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 2000);
+    } else {
+      toast.error(result.message || "Something went wrong!");
+    }
+  } catch (error) {
+    console.log("API Error:", error);
+    toast.error("Server error, please try again later.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
     const [currentStep, setCurrentStep] = useState(1);
     const formData = watch()
@@ -46,8 +65,6 @@ const AppointmentBooking = () => {
         e.preventDefault();
         setCurrentStep((prev) => prev - 1);
     }
-
-
 
     return (
 
@@ -125,7 +142,7 @@ const AppointmentBooking = () => {
                                             <p className="font-medium"><strong>Street Address (Optional):</strong> {formData.stress2}</p>
                                             <p className="font-medium"><strong>City:</strong> {formData.city}</p>
                                             <p className="font-medium"><strong>State:</strong> {formData.state}</p>
-                                            <p className="font-medium"><strong>Postal / Zip Code:</strong> {formData.Poatel}</p>
+                                            <p className="font-medium"><strong>Postal / Zip Code:</strong> {formData.Postel}</p>
                                         </div>
                                         <div className="flex flex-col gap-[7px] text-[14px]">
                                             <h3 id="payment-details" className="font-heading font-bold text-[14px]">Payment Details</h3>
@@ -172,7 +189,7 @@ const AppointmentBooking = () => {
                                             <p className="font-medium"><strong>Street Address (Optional):</strong> {formData.stress2}</p>
                                             <p className="font-medium"><strong>City:</strong> {formData.city}</p>
                                             <p className="font-medium"><strong>State:</strong> {formData.state}</p>
-                                            <p className="font-medium"><strong>Postal / Zip Code:</strong> {formData.Poatel}</p>
+                                            <p className="font-medium"><strong>Postal / Zip Code:</strong> {formData.Postel}</p>
                                         </div>
                                         <div className="flex flex-col gap-[7px] text-[14px]">
                                             <h3 id="payment-details" className="font-heading font-bold text-[14px]">Payment Details</h3>
@@ -181,7 +198,7 @@ const AppointmentBooking = () => {
 
                                     </div>
 
-                                 
+
                                 </div>
 
 
@@ -191,9 +208,15 @@ const AppointmentBooking = () => {
 
                         </div>
                         <div className="flex flex-row gap-[20px] pt-[20px]">
-                            {currentStep >1  && currentStep <=5 && ( <Button onClick={prevStep}>Back</Button>)}
+                            {currentStep > 1 && currentStep <= 5 && (<Button onClick={prevStep}>Back</Button>)}
                             {currentStep < 5 && <Button onClick={nextStep}>Next</Button>}
-                            {currentStep === 5 && <Button type="submit" onClick={handleSubmit}>Submit</Button>}
+                            {currentStep === 5 && (
+                                <Button type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? "Submitting..." : "Submit"}
+                                </Button>
+                            )}
+
+
                         </div>
 
                     </form>

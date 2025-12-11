@@ -14,7 +14,6 @@ const CompleteProfile = () => {
 
   // ⬅️ Get userId saved at signup/login
   const userId = localStorage.getItem("userId");
-
   const onSubmit = async (data) => {
     try {
       setLoading(true);
@@ -33,7 +32,6 @@ const CompleteProfile = () => {
       formData.append("permanentAddress", data.permanentAddress);
       formData.append("nationalId", data.nationalId);
       formData.append("qualification", data.qualification);
-
       formData.append("qualificationDoc", data.qualificationDoc[0]);
       formData.append("photo", data.photo[0]);
 

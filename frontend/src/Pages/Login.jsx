@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { loginAPI } from "../api/api";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,32 +28,37 @@ const Login = () => {
 
       // If backend says profile incomplete -> redirect to complete-profile
       if (res.data.redirect === "/complete-profile") {
-        // Save userId so CompleteProfile can use it
         if (res.data.userId) localStorage.setItem("userId", res.data.userId);
-        alert("Please complete your profile to continue.");
+
+        toast.error("Please complete your profile to continue.", {
+          style: { background: "#ffefef", color: "#c10000" },
+        });
+
         navigate("/complete-profile");
         return;
       }
 
-      // Normal (successful) login response contains token
+      // Successful login
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("role", res.data.role);
         localStorage.setItem("userId", res.data.userId);
 
-        // redirect based on role
+        toast.success("Login Successful!", {
+          style: { background: "#e8fff1", color: "#0f8a44" },
+        });
+
         if (res.data.role === "admin") navigate("/admin/dashboard");
         else navigate("/employee/dashboard");
 
-        alert("Login Successful!");
       } else {
-        // Unexpected but handle gracefully
-        alert(res.data.msg || "Login completed");
+        toast.error(res.data.msg || "Login completed");
       }
     } catch (err) {
-      // If 403 admin approval required or other error
       const msg = err.response?.data?.msg || "Invalid credentials!";
-      alert(msg);
+      toast.error(msg, {
+        style: { background: "#ffefef", color: "#c10000" },
+      });
     } finally {
       setLoading(false);
     }
@@ -74,6 +80,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-center flex-col gap-[30px] w-full">
           <InputBox className={"w-full"} id={"email"} label={"Email"} type="email" placeholder="Enter Email" register={register} bg="bg-white" required />
+          
           <span className="flex flex-col w-full gap-[15px]">
             <Link to={"/forgotpassword"} className="text-right">Forgot Password?</Link>
             <InputBox className={"w-full"} id={"password"} label={"Password"} type="password" placeholder="Enter Password" register={register} bg="bg-white" required />

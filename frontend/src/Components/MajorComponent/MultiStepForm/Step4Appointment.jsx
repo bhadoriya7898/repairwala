@@ -13,8 +13,6 @@ const Step4Appointment = ({ register }) => {
         <input type="radio" name="option" value="A" className="accent-blue-500" />
         <span>Pay At Service Delievery.</span>
       </label>
-
-
       <span>
         <p>1. Visiting, Home Inspection & Cost Estimation Charges INR 299.00 </p>
         <p>2. Free Inspection Charges with Repair & Services</p>

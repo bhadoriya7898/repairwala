@@ -1,4 +1,4 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Briefcase,
@@ -6,69 +6,96 @@ import {
   User,
   LogOut,
   Menu,
-  X
-} from 'lucide-react';
-import { useState } from 'react';
+  X,
+} from "lucide-react";
+import { useState, useEffect } from "react";
 
 export const EmployeeDashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const [employeeName, setEmployeeName] = useState("");
   const navigate = useNavigate();
 
+  /* Load employee name from localStorage */
+  useEffect(() => {
+    const name = localStorage.getItem("firstName") || "Employee";
+    setEmployeeName(name);
+  }, []);
+
+  /* Logout */
   const handleLogout = () => {
-    navigate('/');
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("firstName");
+
+    navigate("/");
   };
 
   const navItems = [
-    { path: '/employee/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-    { path: '/employee/jobs', icon: Briefcase, label: 'Assigned Jobs' },
-    { path: '/employee/history', icon: History, label: 'Work History' },
-    { path: '/employee/profile', icon: User, label: 'Profile Settings' },
+    { path: "/employee/dashboard", icon: LayoutDashboard, label: "Dashboard" },
+    { path: "/employee/jobs", icon: Briefcase, label: "Assigned Jobs" },
+    { path: "/employee/history", icon: History, label: "Work History" },
+    { path: "/employee/profile", icon: User, label: "Profile Settings" },
   ];
+
+  /* Close sidebar on mobile */
+  const handleNavClick = () => {
+    if (window.innerWidth < 1024) setSidebarOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="flex items-center justify-between px-6 py-4">
+
           <div className="flex items-center gap-4">
+            {/* Mobile Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="lg:hidden p-2 rounded-lg hover:bg-gray-100"
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
+
+            {/* Logo Redirect */}
             <img
+              onClick={() => navigate("/employee/dashboard")}
               src="/src/assets/Images/Logo.png"
               alt="RepairWala Logo"
-              className="h-10 w-auto"
+              className="h-10 w-auto cursor-pointer hover:scale-105 transition-all"
             />
-            {/* <h1 className="text-xl font-semibold text-gray-800 hidden sm:block">
-              Employee Panel
-            </h1> */}
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 font-para hidden sm:block">
-              Welcome, Employee
-            </span>
-          </div>
+
+          {/* Employee Name */}
+          <span className="text-sm text-gray-600 font-para hidden sm:block">
+            Welcome, {employeeName}
+          </span>
         </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
+        
         {/* Sidebar */}
         <aside
-          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-            } fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col`}
+          className={`${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-200 
+            transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col`}
         >
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="flex-1 px-4 pt-20 pb-6 space-y-2 overflow-y-auto lg:pt-6">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
+                onClick={handleNavClick}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-para ${isActive
-                    ? 'bg-[#00A884] text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-100'
+                  `flex items-center gap-3 px-4 py-3 rounded-xl transition-all 
+                  duration-200 font-para ${
+                    isActive
+                      ? "bg-[#00A884] text-white shadow-md"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`
                 }
               >
@@ -78,11 +105,12 @@ export const EmployeeDashboardLayout = () => {
             ))}
           </nav>
 
-          {/* Logout Button */}
+          {/* Logout */}
           <div className="p-4 border-t border-gray-200">
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all duration-200 font-para"
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl 
+              text-red-600 hover:bg-red-50 transition-all duration-200 font-para"
             >
               <LogOut size={20} />
               <span className="font-medium">Logout</span>
@@ -105,7 +133,7 @@ export const EmployeeDashboardLayout = () => {
         </div>
       </footer>
 
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"

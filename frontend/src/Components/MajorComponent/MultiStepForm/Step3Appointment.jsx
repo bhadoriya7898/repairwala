@@ -14,10 +14,10 @@ const Step3Appointment = ({register}) => {
              
             
             <span className="flex flex-row gap-[29px]">
-                <InputBox id={"city"} label={"City"} type="text" placeholder="Enter City" bg="bg-[#E5F2F2]" register={register} required />
-                <InputBox id={"state"} label={"State"} type="text" placeholder=" Enter  State" bg="bg-[#E5F2F2]" register={register} required />
+                <InputBox id={"city"} label={"City"} type="text" placeholder="Enter Your City" bg="bg-[#E5F2F2]" register={register} required />
+                <InputBox id={"state"} label={"State"} type="text" placeholder=" Enter Your State" bg="bg-[#E5F2F2]" register={register} required />
             </span>
-            <InputBox id={"Poatel"} label={"Postel / Zip Code"} type="text" placeholder=" Enter Phone Number" bg="bg-[#E5F2F2]" register={register} required />
+            <InputBox id={"Postel"} label={"Postel / Zip Code"} type="text" placeholder=" Enter Your Area Pincode" bg="bg-[#E5F2F2]" register={register} required />
             
             <span><h1>Click Next & You Required Services</h1>
             <h1>Note: Services Available Cities are Indore</h1>

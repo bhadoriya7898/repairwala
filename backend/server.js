@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 import connectDB from "./src/config/db.js";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import appointmentRoutes from "./src/routes/appointment.routes.js";
 import authRoutes from "./src/routes/authRoutes.js";
-// import old adminRoutes if you have separate admin actions elsewhere
+import employeeDashboardRoutes from "./src/routes/employee.dashboard.routes.js";
 // import adminRoutes from "./src/routes/adminRoutes.js";
 import categoryRoutes from "./src/routes/categoryRoutes.js";
 import brandRoutes from "./src/routes/brandRoutes.js";
@@ -37,8 +37,9 @@ app.use("/api/admin", employeeRoutes);
 // Other routes
 app.use("/api/categories", categoryRoutes);
 app.use("/api/brands", brandRoutes);
-app.use("/api/profile", profileRoute);
-
+app.use("/api/profile", profileRoute); 
+app.use("/api/appointments", appointmentRoutes);
+app.use("/api/employee/dashboard", employeeDashboardRoutes);
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

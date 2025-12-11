@@ -13,7 +13,6 @@ const attachProfile = async (user) => {
     profile: profile || null,
   };
 };
-
 /* ---------------------------------------------------------
    1) GET PENDING EMPLOYEES (waiting for admin approval) - now includes profile
 ----------------------------------------------------------*/
@@ -130,7 +129,12 @@ export const getEmployees = async (req, res) => {
       })
     );
 
-    res.json({ employees });
+res.json({
+  success: true,
+  data: employees,       // new format (ManageComplaints)
+  employees: employees,  // old format (Employee Admin Page)
+});
+
   } catch (err) {
     console.error("getEmployees error:", err);
     res.status(500).json({ error: err.message });

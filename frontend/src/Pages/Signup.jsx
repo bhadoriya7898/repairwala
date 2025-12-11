@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthContainer from "../Components/MajorComponent/AuthContainer";
 import { logo } from "../assets/Images/index.js";
 import InputBox from "../Components/MinorComponent/InputBox";
@@ -7,21 +7,24 @@ import Button from "../Components/MinorComponent/Button";
 import DashedLine from "../Components/MinorComponent/DashedLine.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { signupAPI } from "../api/api";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
     if (data.password !== data.confpassword) {
-      alert("Password and Confirm Password do not match!");
+      toast.error("Password and Confirm Password do not match!", {
+        style: { background: "#ffefef", color: "#c10000" },
+      });
       return;
     }
 
     try {
-      setLoading(true); // ⬅ START LOADING
-      
+      setLoading(true);
+
       const res = await signupAPI({
         firstName: data.firstname,
         lastName: data.lastname,
@@ -31,37 +34,42 @@ const Signup = () => {
         confirmPassword: data.confpassword,
         role: "employee",
       });
+
       localStorage.setItem("userId", res.data.userId);
-      alert("Signup successful! Please Complete Your Profile.");
+
+      toast.success("Signup successful! Please complete your profile.", {
+        style: { background: "#e8fff1", color: "#0f8a44" },
+      });
+
       navigate("/complete-profile");
+
     } catch (err) {
-      alert(err.response?.data?.msg || "Signup failed!");
+      toast.error(err.response?.data?.msg || "Signup failed!", {
+        style: { background: "#ffefef", color: "#c10000" },
+      });
     } finally {
-      setLoading(false); // ⬅ STOP LOADING
+      setLoading(false);
     }
   };
 
   return (
     <AuthContainer>
       <div className="w-[420px] flex flex-col gap-[50px] px-3 py-5">
-
+        
         {/* Logo + Title */}
         <div className="flex flex-col gap-[30px] items-center justify-center">
-          <span>
-            <img src={logo} alt="Logo" />
-          </span>
+          <span><img src={logo} alt="Logo" /></span>
 
           <span className="flex flex-col gap-[15px] items-center text-center">
             <h1>Get started absolutely free</h1>
             <p>
               Already have an account?{" "}
-              <Link to={"/login"} className="text-[#00A76F]">
-                Sign in
-              </Link>
+              <Link to={"/login"} className="text-[#00A76F]">Sign in</Link>
             </p>
           </span>
         </div>
 
+        {/* Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center flex-col gap-[30px] w-full"
@@ -69,9 +77,9 @@ const Signup = () => {
           {/* First + Last Name */}
           <span className="flex flex-row w-full gap-[15px]">
             <InputBox
-              className={"w-[50%]"}
-              id={"firstname"}
-              label={"First Name"}
+              className="w-[50%]"
+              id="firstname"
+              label="First Name"
               type="text"
               placeholder="Enter First Name"
               register={register}
@@ -80,9 +88,9 @@ const Signup = () => {
             />
 
             <InputBox
-              className={"w-1/2"}
-              id={"lastname"}
-              label={"Last Name"}
+              className="w-[50%]"
+              id="lastname"
+              label="Last Name"
               type="text"
               placeholder="Enter Last Name"
               register={register}
@@ -93,9 +101,9 @@ const Signup = () => {
 
           {/* Email */}
           <InputBox
-            className={"w-full"}
-            id={"email"}
-            label={"Email"}
+            className="w-full"
+            id="email"
+            label="Email"
             type="email"
             placeholder="Enter Email"
             register={register}
@@ -123,9 +131,9 @@ const Signup = () => {
 
           {/* Password */}
           <InputBox
-            className={"w-full"}
-            id={"password"}
-            label={"Password"}
+            className="w-full"
+            id="password"
+            label="Password"
             type="password"
             placeholder="Enter Password"
             register={register}
@@ -135,9 +143,9 @@ const Signup = () => {
 
           {/* Confirm Password */}
           <InputBox
-            className={"w-full"}
-            id={"confpassword"}
-            label={"Confirm Password"}
+            className="w-full"
+            id="confpassword"
+            label="Confirm Password"
             type="password"
             placeholder="Confirm Password"
             register={register}
@@ -145,7 +153,7 @@ const Signup = () => {
             required
           />
 
-          {/* ⭐ Button with Loading */}
+          {/* Button */}
           <Button
             type="submit"
             disabled={loading}
@@ -156,17 +164,12 @@ const Signup = () => {
 
           <p>
             By signing up, I agree to{" "}
-            <Link to={"/termsandconditions"} className="underline">
-              terms of use
-            </Link>{" "}
+            <Link to={"/termsandconditions"} className="underline">terms of use</Link>{" "}
             and{" "}
-            <Link to={"/privacypolicy"} className="underline">
-              privacy policy
-            </Link>.
+            <Link to={"/privacypolicy"} className="underline">privacy policy</Link>.
           </p>
 
           <DashedLine>OR</DashedLine>
-
         </form>
       </div>
     </AuthContainer>
